@@ -1,0 +1,38 @@
+<?php
+$imgwidth=240;
+$imgheight=240;
+?>
+<?php
+if(count($fiches)>0) : ?>
+    <?php echo $info_res;?>
+    <?php echo $pager_links;?>
+    <div class="row">
+        <?php
+        foreach($fiches as $fiche): ?>
+        <div class="col-sm-6 col-md-4 bazar-entry" <?php echo $fiche['html_data'];?>>
+            <div class="thumbnail">
+              <div style="display: flex; height:240px; align-items: center; justify-content: center; ">
+              <?php if (isset($fiche['imagebf_image']) && $fiche['imagebf_image']!='') : ?>
+
+                      <img class="img-responsive " alt="<?php echo $fiche['bf_titre'];?>" src="<?php echo redimensionner_image('files/'.$fiche['imagebf_image'], 'cache/image_'.$imgwidth.'x'.$imgheight.'_'.$fiche['imagebf_image'], $imgwidth, $imgheight, 'fit'); ?>">
+              <?php else : ?>
+                      <img class="img-responsive" alt="<?php echo $fiche['bf_titre'];?>" src="http://placehold.it/<?php echo $imgwidth.'x'.$imgheight;?>">
+
+              <?php endif; ?>
+              </div>
+
+                <div class="caption">
+                  <h3><?php echo $fiche['bf_titre']; ?></h3>
+                  <p><?php echo $fiche['bf_description']; ?></p>
+                  <p>
+                    <a href="<?php echo $GLOBALS['wiki']->href('', $fiche['id_fiche']); ?>" class="btn btn-primary" role="button">Voir la fiche</a>
+                    <a href="<?php echo $GLOBALS['wiki']->href('edit', $fiche['id_fiche']); ?>" class="btn btn-default" role="button">Modifier la fiche</a>
+                  </p>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php echo $pager_links;?>
+    <?php
+endif;
