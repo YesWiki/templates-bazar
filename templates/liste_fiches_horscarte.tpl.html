@@ -1,0 +1,21 @@
+<!-- Gatien Bataille / juillet 2017 : ce template affiche sous forme de liste, toutes les fiches d'un formulaire qui n'ont pas été pointées sur la carte (donc sans bf-latitude)  -->
+<?php
+if(count($fiches)>0) : ?>
+    <?php echo $info_res;?>
+    <?php echo $pager_links;?>
+    <ul class="BAZ_liste">
+    <?php
+    foreach($fiches as $fiche): ?>
+    <!-- on vérifie si le Bf_latitude existe ou est vide  -->
+       <?php if (!isset($fiche['bf_latitude']) or empty($fiche['bf_latitude']) ) : ?>
+            <!-- on créé une liste  -->
+            <li class="bazar-entry" <?php echo $fiche['html_data'];?>>
+            <!-- on rend le lien clicable dans la liste en affichant le titre  -->
+            <a href="<?php echo $GLOBALS['wiki']->href('', $fiche["id_fiche"]); ?>"><?php echo $fiche["bf_titre"]; ?></a></li>
+       <?php endif; ?> 
+        <?php
+    endforeach; ?>
+    </ul>
+    <?php echo $pager_links;?>
+    <?php
+endif;
