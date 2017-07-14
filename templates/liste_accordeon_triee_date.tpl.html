@@ -41,7 +41,8 @@ if (!function_exists('date_compare')) {
             data-target="#collapse<?php echo $param['nbbazarliste']; ?>_<?php echo $fiche['id_fiche']; ?>"
             data-toggle="collapse">
             <h4 class="panel-title">
-              <small>Le <?php echo substr($fiche['bf_date_debut_evenement'],0,10); ?> </small> / <?php echo $fiche['bf_titre']; ?>
+              <!-- la fonction date en php permet de récupérer et modifier les formats -->
+              <small>Le <?php echo date("d.m.Y", strtotime($fiche['bf_date_debut_evenement'])); ?> </small> / <?php echo $fiche['bf_titre']; ?>
             </h4>
           </div>
           <div id="collapse<?php echo $param['nbbazarliste']; ?>_<?php echo $fiche['id_fiche']; ?>" class="panel-collapse collapse">
