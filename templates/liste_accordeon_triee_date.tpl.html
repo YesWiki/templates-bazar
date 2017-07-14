@@ -1,0 +1,56 @@
+
+   <?php
+   
+if (!function_exists('date_periode')) {
+   
+ function date_periode($fiche)
+{
+    $nbjour = 200;
+    $datejour = time();
+    $datemax = $datejour + ($nbjour*24*60*60);  // date max à J+ nb de jours
+    $datefiche = strtotime($fiche['bf_date_debut_evenement']);
+  $datefin = strtotime($fiche['bf_date_fin_evenement']);
+    if (($datefiche >=$datejour  && $datefiche <=$datemax ) || ($datefin >=$datejour  && $datefin <=$datemax )) {
+        return true;
+        }
+     else  {
+         return  false;
+    }
+}
+}
+if (!function_exists('date_compare')) {
+    //tri par ordre chronologique
+     function date_compare($a, $b)
+     { 
+       $t1 = strtotime($a['bf_date_debut_evenement']);    // strtotime = fonction qui transforme une chaine de caractere en date informatque (= un chiffre calculé depuis 1970)
+       $t2 = strtotime($b['bf_date_debut_evenement']);
+     return $t1 - $t2;
+   }    
+}
+  $fiches = array_filter($fiches, "date_periode");  
+  usort($fiches, 'date_compare');  // http://php.net/manual/fr/function.usort.php (si on veut avoir mal au crane)  
+ ?>
+
+<?php echo $info_res; ?>
+<?php if( count($fiches)>0 ) : $GLOBALS['nb_accordion'] = isset($GLOBALS['nb_accordion']) ? $GLOBALS['nb_accordion']++ : 1; ?>
+<?php echo $pager_links;?>
+<div class="panel-group accordion-group no-dblclick" id="accordion<?php echo $GLOBALS['nb_accordion']; ?>">
+    <?php foreach($fiches as $fiche): ?>
+        <div class="bazar-entry panel panel-default" <?php echo $fiche['html_data'];?>>
+          <div class="panel-heading collapsed"
+            data-target="#collapse<?php echo $param['nbbazarliste']; ?>_<?php echo $fiche['id_fiche']; ?>"
+            data-toggle="collapse">
+            <h4 class="panel-title">
+              <?php echo $fiche['bf_titre']; ?>
+            </h4>
+          </div>
+          <div id="collapse<?php echo $param['nbbazarliste']; ?>_<?php echo $fiche['id_fiche']; ?>" class="panel-collapse collapse">
+            <div class="panel-body">
+              <?php echo baz_voir_fiche(true, $fiche); ?>
+            </div>
+          </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+<?php echo $pager_links; ?>
+<?php endif; ?>
