@@ -7,6 +7,7 @@
   - **liste_fiches_horscarte.tpl.html** : ce template permet de récupérer sour forme de liste les titres des fiches (avec une carte cartogoogle) pour lesquelles les utilisateurs ont oubliés de cliquer sur le bouton "placer le point sur la carte"
   - **liste_accordeon_triee_date.tpl.html** : ce template permet d'afficher sous forme de liste toutes les fiches contenant une date ultérieure à "aujourd'hui" sous format Le date / titre (pratique pour afficher un calendrier en mode liste avec uniquement les évènements à venir)
   - **liste_act_avenir_details.tpl.html** : ce template permet d'afficher sous forme de liste toutes les fiches contenant une date ultérieure à "aujourd'hui" sous format Le date - heure / titre et à la ligne une courte description de l'activité (bf_chapeau) 
+    - **compteurs.tpl.html** : ce template permet d'afficher la somme du champ bf_nombre (si pas dans votre formulaire, utilisez correspondance="bf_nombre=votre champ")
   
   
 ### Installation
