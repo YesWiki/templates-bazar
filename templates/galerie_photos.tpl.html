@@ -1,0 +1,30 @@
+<?php if( count($fiches)>0 ) :  $row=0; ?>
+  <?php echo $pager_links; ?>
+	<?php foreach($fiches as $fiche): $row++;  ?>
+    <?php if ($row==1) echo '<div class="row">'; ?>
+    <div class="span2 col-xs-2">
+      <a class="colorbox" href="<?php echo redimensionner_image('files/'.$fiche['imagebf_image'], 'cache/image_900_900_'.$fiche['imagebf_image'], 900, 900, true); ?>" title="<?php echo htmlentities($fiche['bf_titre']);?>">
+      <div class="thumbnail">
+        <?php if (isset($fiche['imagebf_image']) && $fiche['imagebf_image']!='') :   ?>
+          <img alt="<?php echo htmlentities($fiche['bf_titre']);?>" src="<?php echo redimensionner_image('files/'.$fiche['imagebf_image'], 'cache/image_160_120_'.$fiche['imagebf_image'], 160, 120, true); ?>" class="img-responsive">
+        <?php endif; ?>
+        <div class="caption caption-name">
+          <strong><?php echo $fiche['bf_titre'];?></strong>
+        </div>
+      </div>
+      </a>
+      <br />
+    </div>
+    <?php if ($row==6) {echo '</div>'; $row=0;} ?>
+    <?php endforeach; ?>
+    <?php if ($row!=0) {echo '</div>';} ?>
+    <?php echo $pager_links; ?>
+    <style>
+      .caption-name {text-align: center; font-size:14px;}
+    </style>
+    <link rel="stylesheet" href="themes/tools/bazar/templates/colorbox.css" />
+<?php
+    $GLOBALS['wiki']->AddJavascriptFile('themes/tools/bazar/templates/js/jquery.colorbox-min.js');
+    $GLOBALS['wiki']->AddJavascript("$('a.colorbox').colorbox({rel:\"galerie\"});\n");
+    ?>
+<?php endif; ?>
