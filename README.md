@@ -8,6 +8,8 @@
   - **liste_accordeon_triee_date.tpl.html** : ce template permet d'afficher sous forme de liste toutes les fiches contenant une date ultérieure à "aujourd'hui" sous format Le date / titre (pratique pour afficher un calendrier en mode liste avec uniquement les évènements à venir)
   - **liste_act_avenir_details.tpl.html** : ce template permet d'afficher sous forme de liste toutes les fiches contenant une date ultérieure à "aujourd'hui" sous format Le date - heure / titre et à la ligne une courte description de l'activité (bf_chapeau) 
     - **compteurs.tpl.html** : ce template permet d'afficher la somme du champ bf_nombre (si pas dans votre formulaire, utilisez correspondance="bf_nombre=votre champ")
+    - **galerie_photos.tpl.html** : ce template permet d'afficher une galerie de photos "classique" en 6 colonnes avec la photo et le titre par dessous. 
+    - **livredor-droite-gauche.tpl.html** : ce template permet d'afficher un recueil d'infos sous forme de bulles (gauche-droite).
   
   
 ### Installation
