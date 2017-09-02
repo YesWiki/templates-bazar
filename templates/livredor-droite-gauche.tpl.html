@@ -1,0 +1,54 @@
+<?php if( count($fiches)>0 ) : $nbcol=0; ?>
+<?php  
+$imgwidth=160;  
+$imgheight=160; 
+$nombre=0;
+?> 
+<?php foreach($fiches as $fiche): $nombre++; ?> <!-- changement flo : on mets +1 pour $nombre à chaque itération ($nombre++;) -->
+ <?php if ($nombre % 2 == 0) : ?><!-- changement flo : on teste le modulo 2 pour savoir si pair ou impair-->
+    <div class="row">
+        <div class="col-md-2 span2">
+             <?php if (isset($fiche['imagebf_image']) && $fiche['imagebf_image']!='') : ?>
+                <img class="img-responsive img-circle" alt="<?php echo $fiche['bf_titre'];?>" src="<?php echo redimensionner_image('files/'.$fiche['imagebf_image'], 'cache/image_'.$imgwidth.'x'.$imgheight.'_'.$fiche['imagebf_image'], $imgwidth, $imgheight, 'crop'); ?>">
+              <?php else : ?>
+               <img class="img-responsive img-circle" alt="<?php echo $fiche['bf_titre'];?>" src="files/user.png">
+              <?php endif; ?>
+        </div>
+        <div class="col-md-6 span6">
+              <div class="caption">
+                <h4><?php echo $fiche['bf_titre'];?></h4>
+                <div class="text-mini"><?php echo $fiche['bf_description'];?></div>
+              </div>
+        </div> 
+      </div>
+      <hr>
+ <?php else: ?>
+    <div class="row">
+        <div class="col-md-6 span6">
+              <div class="caption">
+                <h4><?php echo $fiche['bf_titre'];?></h4>
+                <div class="text-mini"><?php echo $fiche['bf_description'];?></div>
+              </div>
+        </div> 
+        <div class="col-md-2 span2">
+             <?php if (isset($fiche['imagebf_image']) && $fiche['imagebf_image']!='') : ?>
+                <img class="img-responsive img-circle" alt="<?php echo $fiche['bf_titre'];?>" src="<?php echo redimensionner_image('files/'.$fiche['imagebf_image'], 'cache/image_'.$imgwidth.'x'.$imgheight.'_'.$fiche['imagebf_image'], $imgwidth, $imgheight, 'crop'); ?>">
+              <?php else : ?>
+               <img class="img-responsive img-circle" alt="<?php echo $fiche['bf_titre'];?>" src="files/user.png">
+              <?php endif; ?>
+        </div>
+      </div>
+      <hr>
+<?php endif; ?>
+<?php endforeach; ?>
+<?php endif; ?>
+ 
+   <style>
+.text-mini {  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
+  overflow:hidden;  }
+</style>
