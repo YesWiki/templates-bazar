@@ -1,0 +1,17 @@
+<?php
+/*
+Ce template permet d'additionner le contenu d'un des champs de votre formulaire et d'en afficher la somme
+un exemple sur www.unarbrepourlawapi.be (déjà plus de XXXX arbres plantés)
+*/
+
+if(count($fiches)>0) : $totalarbres = 0; ?>
+    <?php
+    foreach($fiches as $fiche): ?>
+        <?php if (!empty($fiche['bf_nombre'])) {
+             $totalarbres = $totalarbres + $fiche['bf_nombre'];
+            } ?>
+        <?php
+    endforeach; ?>
+    <?php
+    echo $totalarbres;
+endif;
