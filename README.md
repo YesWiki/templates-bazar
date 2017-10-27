@@ -13,6 +13,7 @@
   - **liste_galerie.tpl.html** : ce template permet d'afficher une galerie photo en deux colonnes. Celle de gauche reprend en mini vignettes toutes les photos disponibles et sur celle de droite, une vue agrandie de la photo sélectionnée dans la partie gauche.
   - **mails_maj.tpl.html** : ce template affiche les fiches non mises à jour depuis x jours (180 par défaut, paramètre : nbjour="x") et d'envoyer un mail paramétrable aux contacts des fiches.
   - **map-date-futures.tpl.html** : ce template affiche sous forme de carte les fiches événements avec une date future.
+  - **liste_liens_editables.tpl.html** : ce template affiche sous forme de liste clicable le contenu d'un formulaire. Si on clique, on ouvre un autre onglet avec la fiche en mode édition.
   
 ### Installation
 A partir de la racine du wiki, copiez les fichiers dans le répertoire /themes/tools/bazar/ (à créer si inexistant)
