@@ -14,7 +14,7 @@
   - **mails_maj.tpl.html** : ce template affiche les fiches non mises à jour depuis x jours (180 par défaut, paramètre : nbjour="x") et d'envoyer un mail paramétrable aux contacts des fiches.
   - **map-date-futures.tpl.html** : ce template affiche sous forme de carte les fiches événements avec une date future.
   - **liste_liens_editables.tpl.html** : ce template affiche sous forme de liste clicable le contenu d'un formulaire. Si on clique, on ouvre un autre onglet avec la fiche en mode édition.
-  - **semi-ouvert.tpl.html** : ce template affiche sous forme de liste des "blocs" le contenu du formulaire avec une image à gauche et des champs (bf-titre et ... ) à droite + télécharger fichier, lien vers url et bouton en savoir pkus pour ouvrir la fiche complètement
+  - **semi-ouvert.tpl.html** : ce template affiche sous forme de liste des "blocs" le contenu du formulaire avec une image à gauche et des champs (bf-titre et ... ) à droite + télécharger fichier, lien vers url et bouton en savoir pkus pour ouvrir la fiche complètement (tous les champs de ce template sont cachés si ils ne contiennent pas de données / ou image par défaut)
   
 ### Installation
 A partir de la racine du wiki, copiez les fichiers dans le répertoire /themes/tools/bazar/ (à créer si inexistant)
