@@ -22,7 +22,7 @@ if(count($fiches)>0) : ?>
             </div>
             <div class="col-sm-6 col-md-9 bazar-entry" <?php echo $fiche['html_data'];?>>
                     <?php if (isset($fiche['bf_date_debut_evenement']) && $fiche['bf_date_debut_evenement']!='' ) : ?>
-                      <div class="pull-right"><b><small>Le <?php echo $fiche['bf_date_debut_evenement']; ?></small></b></div>
+                      <div class="pull-right"><b><small>Le <?php echo str_replace('00:00:00', '', date("d.m.Y H:i", strtotime($fiche['bf_date_debut_evenement']))); ?> </small></b></div>
                     <?php endif; ?>
                       <h4><?php echo $fiche['bf_titre']; ?></h4>
                       <?php if (isset($fiche['bf_description']) && $fiche['bf_description']!='' ) : ?>
