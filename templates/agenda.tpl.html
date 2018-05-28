@@ -1,0 +1,238 @@
+
+<?php if( count($fiches)>0 ) : ?>
+<?php
+$imgwidth=450;
+$imgheight=450;
+$classnb = 1;
+$datejour = time();
+$rowcol = ''; // declaration d'une chaine de char vide
+$modal = ''; // declaration d'une chaine de char vide
+?>
+
+   <?php
+
+if (!function_exists('date_periode')) {
+
+ function date_periode($fiche)
+{
+    $nbjour = 290;
+    $datejour = time();
+    $datemax = $datejour + ($nbjour*24*60*60);  // date max � J+ nb de jours
+    $datefiche = strtotime($fiche['bf_date_debut_evenement']);
+  $datefin = strtotime($fiche['bf_date_fin_evenement']);
+    if (($datefiche >=$datejour  && $datefiche <=$datemax ) || ($datefin >=$datejour  && $datefin <=$datemax )) {
+        return true;
+        }
+     else  {
+         return  false;
+    }
+}
+}
+if (!function_exists('date_compare')) {
+    //tri par ordre chronologique
+     function date_compare($a, $b)
+     {
+       $t1 = strtotime($a['bf_date_debut_evenement']);    // strtotime = fonction qui transforme une chaine de caractere en date informatque (= un chiffre calcul� depuis 1970)
+       $t2 = strtotime($b['bf_date_debut_evenement']);
+     return $t1 - $t2;
+   }
+}
+  $fiches = array_filter($fiches, "date_periode");
+  usort($fiches, 'date_compare');  // http://php.net/manual/fr/function.usort.php (si on veut avoir mal au crane)
+ ?>
+
+
+ <?php
+
+ /**************************************************************************************************
+  * parametres du template :
+  * ils peuvent être passés dans l'action bazar ou bazarliste, mais sont spécifiques à ce template
+  **************************************************************************************************/
+
+  // test si on vveut affichage modal ou pas
+  $modal = $GLOBALS['wiki']->GetParameter('modal');
+  if (empty($modal)) {
+      $modal = non;
+  }
+
+  if ($modal==1) {
+      $modal = modalbox;
+  }
+
+ // test sur nombre de colonne
+ $nbcol = $GLOBALS['wiki']->GetParameter('nbcol');
+ if (empty($nbcol)) {
+     $nbcol = 4;
+ }
+
+
+
+ // test sur colonne et transformation en info poour le row
+ if ($nbcol==1) {
+     $rowcol = 12;
+ }
+
+ if ($nbcol==2) {
+     $rowcol = 6;
+ }
+
+ if ($nbcol==3) {
+     $rowcol = 4;
+ }
+
+ if ($nbcol==4) {
+     $rowcol = 3;
+ }
+
+ if ($nbcol==6) {
+     $rowcol = 2;
+ }
+ ?>
+
+<div class="row">
+    <?php foreach($fiches as $fiche): ?>
+      <style>
+      .modal-header {
+          display:none;
+      }
+      </style>
+        <div class="col-md-<?php echo $rowcol; ?> col-sm-6 col-xs-12 bazar-entry grid-echiquier" <?php echo $fiche['html_data'];?>">
+              <div class="dummy"></div>
+              <a class="case-echiquier <?php echo $modal; ?>" title="<?php echo htmlspecialchars($fiche['bf_titre']);?>" href="<?php echo $GLOBALS['wiki']->href('', $fiche['id_fiche']); ?>">
+                <div class="mask"></div>
+                <?php if (isset($fiche['imagebf_image']) && $fiche['imagebf_image']!='') : ?>
+                  <img class="img-responsive" alt="<?php echo htmlspecialchars($fiche['bf_titre']);?>" src="<?php echo redimensionner_image('files/'.$fiche['imagebf_image'], 'cache/image_'.$imgwidth.'x'.$imgheight.'_'.$fiche['imagebf_image'], $imgwidth, $imgheight, 'crop'); ?>">
+                <?php else : ?>
+                  <img class="img-responsive" alt="<?php echo htmlspecialchars($fiche['bf_titre']);?>" src="<?php echo redimensionner_image('files/img-placeholder.png', 'cache/image_'.$imgwidth.'x'.$imgheight.'_img-placeholder.png', $imgwidth, $imgheight, 'crop'); ?>">
+                <?php endif; ?>
+                <div class="case-titre">
+                  <h5><?php echo $fiche['bf_titre'];?></h5>
+                  <?php if (isset($fiche['bf_date_debut_evenement']) && $fiche['bf_date_debut_evenement']!='' ) : ?>
+                    <div class="pull-right"><h6>Le <?php echo str_replace('00:00', '', date("d.m.Y H:i", strtotime($fiche['bf_date_debut_evenement']))); ?> </h6></div>
+                  <?php endif; ?>
+
+                </div>
+                <div class="case-echiquier-desc">
+                  <div class="text-mini"><?php echo $fiche['bf_description_courte'];?></div>
+                </div>
+              </a>
+            </div>
+
+    <?php endforeach; ?>
+</div> <!-- /.row --><!-- permet de fermer la class row si jamais y a que 3 images -->
+<style>
+.dummy {
+  margin-top:116%;
+}
+.case-echiquier {
+    display:block; /* pour que les liens (en display:inline par défaut) acceptent les margin et padding */
+    position:absolute; /* pour permettre de positionner ensuite le contenu de cette class par rapport à celle-ci (à l'intérieur de celle-ci) */
+    margin: 0 15px 30px;
+    overflow:hidden;
+    top:0;
+    bottom: 0;
+    left:0;
+    right:0;
+    /*height:<?php echo $imgheight; ?>px;*/
+
+}
+.mask {
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    -webkit-transition: background-color 200ms linear;
+    -moz-transition: background-color 200ms linear;
+    -o-transition: background-color 200ms linear;
+    -ms-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+}
+
+.grid-echiquier:nth-child(4n+4) .mask {
+    background-color:rgba(0,125,190,0.5);
+    }
+.grid-echiquier:nth-child(4n+4) .case-echiquier:hover .mask {
+    background-color:rgba(0,125,190,1);
+    }
+
+.grid-echiquier:nth-child(4n+1) .mask {
+    background-color:rgba(78,184,87,0.5);
+    }
+.grid-echiquier:nth-child(4n+1) .case-echiquier:hover .mask {
+    background-color:rgba(78,184,87,1);
+    }
+
+.grid-echiquier:nth-child(4n+2) .mask {
+    background-color:rgba(255,222,47,0.5);
+    }
+.grid-echiquier:nth-child(4n+2) .case-echiquier:hover .mask {
+    background-color:rgba(255,222,47,1);
+    }
+
+.grid-echiquier:nth-child(4n+3) .mask {
+    background-color:rgba(236,0,137,0.5);
+    }
+.grid-echiquier:nth-child(4n+3) .case-echiquier:hover .mask {
+    background-color:rgba(236,0,137,1);
+    }
+
+.case-titre {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  color: #FFF;
+  text-transform: uppercase;
+  margin: 0px;
+  font-weight: bold;
+  text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.8);
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
+  hyphens: auto;
+}
+
+
+.case-echiquier:hover{
+    text-decoration: none;
+}
+
+.case-echiquier-desc {
+ opacity : 0;
+ display: hidden;
+}
+
+.case-echiquier:hover .case-echiquier-desc {
+    display:block;
+    opacity:1;
+    position:absolute;
+    left:0;
+    right:0;
+    padding:0 10px;
+    top:70px;
+    bottom:20px;
+    overflow:hidden;
+    color: #FFF;
+    -webkit-transition: opacity 300ms linear;
+    -moz-transition: opacity 300ms linear;
+    -o-transition: opacity 300ms linear;
+    -ms-transition: opacity 300ms linear;
+    transition: opacity 300ms linear;
+    }
+.grid-echiquier:nth-child(4n+1) .case-echiquier:hover .case-echiquier-desc {
+    background-color:rgba(78,184,87,1);
+    }
+.grid-echiquier:nth-child(4n+2) .case-echiquier:hover .case-echiquier-desc {
+    background-color:rgba(255,222,47,1);
+    }
+.grid-echiquier:nth-child(4n+3) .case-echiquier:hover .case-echiquier-desc {
+    background-color:rgba(236,0,137,1);
+    }
+.grid-echiquier:nth-child(4n+4) .case-echiquier:hover .case-echiquier-desc {
+    background-color:rgba(0,125,190,1);
+    }
+</style>
+<?php endif; ?>
