@@ -16,14 +16,17 @@
   - **liste_liens_editables.tpl.html** : ce template affiche sous forme de liste clicable le contenu d'un formulaire. Si on clique, on ouvre un autre onglet avec la fiche en mode édition.
   - **semi-ouvert.tpl.html** : ce template affiche sous forme de liste des "blocs" le contenu du formulaire avec une image à gauche et des champs (bf-titre et ... ) à droite + télécharger fichier, lien vers url et bouton en savoir pkus pour ouvrir la fiche complètement (tous les champs de ce template sont cachés si ils ne contiennent pas de données / ou image par défaut)
  
-  - **actu.tpl.html** : il montre les actus comprises entre deux dates de parution (titre + date + image arrière fond). Lors du survol => description et au clic ouverture de la fiche (en modal ou pas). Les champs nécessaires minimaux sont
+  - **actu.tpl.html** : il montre les actus comprises entre deux dates de parution (titre + image arrière fond). Lors du survol => description et au clic ouverture de la fiche (en modal ou pas). Les champs nécessaires minimaux sont
     - bf_titre
     - bf_date_debut_evenement
     - bf_description_courte
     - bf_date_debut_publication
     - bf_date_fin_publication
 
- 
+  - **agenda.tpl.html** : il montre les évènements à venir (titre + date + image arrière fond). Lors du survol => description et au clic ouverture de la fiche (en modal ou pas). Les champs nécessaires minimaux sont
+    - bf_titre
+    - bf_date_debut_evenement
+    - bf_description_courte
  
 ### Installation
 A partir de la racine du wiki, copiez les fichiers dans le répertoire /themes/tools/bazar/ (à créer si inexistant)
