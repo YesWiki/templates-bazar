@@ -75,20 +75,20 @@ if ($nbcol==6) {
       }
       </style>
       <?php if (date_affichable($fiche)) :  ?>
-        <div class="col-md-<?php echo $rowcol; ?> col-sm-6 col-xs-12 bazar-entry grid-echiquier" <?php echo $fiche['html_data'];?>">
+        <div class="col-md-<?php echo $rowcol; ?> col-sm-6 col-xs-12 bazar-entry grid-actuquier" <?php echo $fiche['html_data'];?>">
               <div class="dummy"></div>
-              <a class="case-echiquier <?php echo $modal; ?>" title="<?php echo htmlspecialchars($fiche['bf_titre']);?>" href="<?php echo $GLOBALS['wiki']->href('', $fiche['id_fiche']); ?>">
+              <a class="case-actuquier <?php echo $modal; ?>" title="<?php echo htmlspecialchars($fiche['bf_titre']);?>" href="<?php echo $GLOBALS['wiki']->href('', $fiche['id_fiche']); ?>">
                 <div class="mask"></div>
                 <?php if (isset($fiche['imagebf_image']) && $fiche['imagebf_image']!='') : ?>
                   <img class="img-responsive" alt="<?php echo htmlspecialchars($fiche['bf_titre']);?>" src="<?php echo redimensionner_image('files/'.$fiche['imagebf_image'], 'cache/image_'.$imgwidth.'x'.$imgheight.'_'.$fiche['imagebf_image'], $imgwidth, $imgheight, 'crop'); ?>">
                 <?php else : ?>
                   <img class="img-responsive" alt="<?php echo htmlspecialchars($fiche['bf_titre']);?>" src="<?php echo redimensionner_image('files/img-placeholder.png', 'cache/image_'.$imgwidth.'x'.$imgheight.'_img-placeholder.png', $imgwidth, $imgheight, 'crop'); ?>">
                 <?php endif; ?>
-                <div class="case-titre">
+                <div class="case-titre-actu">
                   <h5><?php echo $fiche['bf_titre'];?></h5>
                   <h6><?php echo $fiche['bf_date_debut_evenement'];?></h6>
                 </div>
-                <div class="case-echiquier-desc">
+                <div class="case-actuquier-desc">
                   <div class="text-mini"><?php echo $fiche['bf_description_courte'];?></div>
                 </div>
               </a>
@@ -100,7 +100,7 @@ if ($nbcol==6) {
 .dummy {
   margin-top:116%;
 }
-.case-echiquier {
+.case-actuquier {
     display:block; /* pour que les liens (en display:inline par défaut) acceptent les margin et padding */
     position:absolute; /* pour permettre de positionner ensuite le contenu de cette class par rapport à celle-ci (à l'intérieur de celle-ci) */
     margin: 0 15px 30px;
@@ -125,35 +125,35 @@ if ($nbcol==6) {
     transition: background-color 200ms linear;
 }
 
-.grid-echiquier:nth-child(4n+4) .mask {
+.grid-actuquier:nth-child(4n+4) .mask {
     background-color:rgba(0,125,190,0.5);
     }
-.grid-echiquier:nth-child(4n+4) .case-echiquier:hover .mask {
+.grid-actuquier:nth-child(4n+4) .case-actuquier:hover .mask {
     background-color:rgba(0,125,190,1);
     }
 
-.grid-echiquier:nth-child(4n+1) .mask {
+.grid-actuquier:nth-child(4n+1) .mask {
     background-color:rgba(78,184,87,0.5);
     }
-.grid-echiquier:nth-child(4n+1) .case-echiquier:hover .mask {
+.grid-actuquier:nth-child(4n+1) .case-actuquier:hover .mask {
     background-color:rgba(78,184,87,1);
     }
 
-.grid-echiquier:nth-child(4n+2) .mask {
+.grid-actuquier:nth-child(4n+2) .mask {
     background-color:rgba(255,222,47,0.5);
     }
-.grid-echiquier:nth-child(4n+2) .case-echiquier:hover .mask {
+.grid-actuquier:nth-child(4n+2) .case-actuquier:hover .mask {
     background-color:rgba(255,222,47,1);
     }
 
-.grid-echiquier:nth-child(4n+3) .mask {
+.grid-actuquier:nth-child(4n+3) .mask {
     background-color:rgba(236,0,137,0.5);
     }
-.grid-echiquier:nth-child(4n+3) .case-echiquier:hover .mask {
+.grid-actuquier:nth-child(4n+3) .case-actuquier:hover .mask {
     background-color:rgba(236,0,137,1);
     }
 
-.case-titre {
+.case-titre-actu {
   position: absolute;
   top: 10px;
   left: 10px;
@@ -172,16 +172,16 @@ if ($nbcol==6) {
 }
 
 
-.case-echiquier:hover{
+.case-actuquier:hover{
     text-decoration: none;
 }
 
-.case-echiquier-desc {
+.case-actuquier-desc {
  opacity : 0;
  display: hidden;
 }
 
-.case-echiquier:hover .case-echiquier-desc {
+.case-actuquier:hover .case-actuquier-desc {
     display:block;
     opacity:1;
     position:absolute;
@@ -198,16 +198,16 @@ if ($nbcol==6) {
     -ms-transition: opacity 300ms linear;
     transition: opacity 300ms linear;
     }
-.grid-echiquier:nth-child(4n+1) .case-echiquier:hover .case-echiquier-desc {
+.grid-actuquier:nth-child(4n+1) .case-actuquier:hover .case-actuquier-desc {
     background-color:rgba(78,184,87,1);
     }
-.grid-echiquier:nth-child(4n+2) .case-echiquier:hover .case-echiquier-desc {
+.grid-actuquier:nth-child(4n+2) .case-actuquier:hover .case-actuquier-desc {
     background-color:rgba(255,222,47,1);
     }
-.grid-echiquier:nth-child(4n+3) .case-echiquier:hover .case-echiquier-desc {
+.grid-actuquier:nth-child(4n+3) .case-actuquier:hover .case-actuquier-desc {
     background-color:rgba(236,0,137,1);
     }
-.grid-echiquier:nth-child(4n+4) .case-echiquier:hover .case-echiquier-desc {
+.grid-actuquier:nth-child(4n+4) .case-actuquier:hover .case-actuquier-desc {
     background-color:rgba(0,125,190,1);
     }
 </style>
