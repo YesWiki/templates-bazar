@@ -27,6 +27,8 @@
     - bf_titre
     - bf_date_debut_evenement
     - bf_description_courte
+    
+  - **post-it.tpl.html** : il montre les données sous forme de post-it (3 couleurs aléatoires). Le contenu affiché dans le post-it est bf_titre et bf_aide (textelong)
  
 ### Installation
 A partir de la racine du wiki, copiez les fichiers dans le répertoire /themes/tools/bazar/ (à créer si inexistant)
