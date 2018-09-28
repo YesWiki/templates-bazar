@@ -64,13 +64,13 @@
     - bf_description_courte
     - bf_date_debut_publication
     - bf_date_fin_publication
-   - paramètre possible : modal="1" nbcol="1, 2, 3, 4 ou 6"
+    - paramètre possible : modal="1" nbcol="1, 2, 3, 4 ou 6"
   - **agenda.tpl.html** : il montre les évènements à venir (titre + date + image arrière fond). Lors du survol => description et au clic ouverture de la fiche (en modal ou pas). Les champs nécessaires minimaux sont
     - bf_titre
     - bf_image optionnel
     - bf_date_debut_evenement
     - bf_description_courte
-   - paramètre possible : agenda="futur" modal="1" nbcol="1, 2, 3, 4 ou 6"
+    - paramètre possible : agenda="futur" modal="1" nbcol="1, 2, 3, 4 ou 6"
   - **post-it.tpl.html** : il montre les données sous forme de post-it (3 couleurs aléatoires). Le contenu affiché dans le post-it est bf_titre et bf_aide (textelong).  Les champs nécessaires minimaux sont
     - bf_titre
     - bf_aide
