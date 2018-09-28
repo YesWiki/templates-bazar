@@ -10,7 +10,7 @@
     - bf_image optionnelle
     - bf_baseline
     - bf_description
-   - paramètre possible : nbcol="1, 2, 3, 4 ou 6" 
+    - paramètre possible : nbcol="1, 2, 3, 4 ou 6" 
   - **liste_mails_seuls.tpl.html** : ce template permet de récupérer sour forme de liste les emails d'un formulaire afin de pouvoir facilement les copier-coller dans un webmail. Les champs nécessaires minimaux sont
     - bf_titre
     - bf_mail
