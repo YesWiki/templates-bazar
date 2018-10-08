@@ -1,4 +1,9 @@
 # Templates-bazar : des templates à utiliser dans bazar
+
+### Installation
+A partir de la racine du wiki, copiez les fichiers dans le répertoire /themes/tools/bazar/ (à créer si inexistant)
+Attention, certains templates nécessitent l'ajout de dossiers supplémentaires comportant des fichiers (images, bibliothèques javascript, css...)
+
 ### Présentation des templates
  - **vignette_description.tpl.html** : présentation sous forme de vignettes d'image, puis de titre, courte description (bf_description) et boutons de visualisation et d'édition. Les champs nécessaires minimaux sont
     - bf_titre
@@ -74,6 +79,3 @@
   - **post-it.tpl.html** : il montre les données sous forme de post-it (3 couleurs aléatoires). Le contenu affiché dans le post-it est bf_titre et bf_aide (textelong).  Les champs nécessaires minimaux sont
     - bf_titre
     - bf_aide
-### Installation
-A partir de la racine du wiki, copiez les fichiers dans le répertoire /themes/tools/bazar/ (à créer si inexistant)
-Attention, certains templates nécessitent l'ajout de dossiers supplémentaires comportant des fichiers (images, bibliothèques javascript, css...)
