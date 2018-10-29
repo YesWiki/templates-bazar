@@ -83,4 +83,10 @@ Attention, certains templates nécessitent l'ajout de dossiers supplémentaires 
      - dernier aticle mis en avant
      - affiche la date et l'auteur del'article sous le titre
      - le résumé affiché est un champ "bf_chapo" - car on ne voulait pas avoir une description tronquée
-     - Plus d'infos https://yeswiki.net/?BlogTplHtml
+     Plus d'infos https://yeswiki.net/?BlogTplHtml
+ Les champs nécessaires minimaux sont : 
+     - bf_titre
+     - bf_date_article
+     - bf_chapo
+     - bf_image
+
