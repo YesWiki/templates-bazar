@@ -51,7 +51,7 @@ Attention, certains templates nécessitent l'ajout de dossiers supplémentaires 
   - **mails_maj.tpl.html** : ce template affiche les fiches non mises à jour depuis x jours (180 par défaut, paramètre : nbjour="x") et d'envoyer un mail paramétrable aux contacts des fiches. Les champs nécessaires minimaux sont
     - bf_titre
     - bf_mail
-   - paramètre possible : nbjour=" " 
+    - paramètre possible : nbjour=" " 
   - **map-date-futures.tpl.html** : ce template affiche sous forme de carte les fiches événements avec une date future. Les champs nécessaires minimaux sont
     - bf_titre
     - bf_date_debut_evenement
