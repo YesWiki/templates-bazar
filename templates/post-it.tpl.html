@@ -57,7 +57,7 @@ if(count($fiches)>0) : ?>
             <h4><?php echo $fiche['bf_titre'];?></h4>
             <p>
              <?php if (isset($fiche['bf_description']) && $fiche['bf_description']!='') : ?>
-               <?php echo $fiche['bf_description'];?>
+               <?php echo substr($fiche['bf_description'],0,200); ?>...
              <?php endif; ?>
            </p>
           </div>
@@ -72,7 +72,7 @@ if(count($fiches)>0) : ?>
 <style>
 /* @import url('https://fonts.googleapis.com/css?family=Reenie+Beanie'); */
 
-@import url('https://fonts.googleapis.com/css?family=Patrick+Hand');
+
 
 .containerpostit{
   display: flex;
@@ -99,9 +99,7 @@ if(count($fiches)>0) : ?>
   height:250px;
   padding: 20px 5px 5px 5px;
   border:1px solid #E8E8E8;
-  /* font-family: 'Reenie Beanie', cursive; */
-  font-family: 'Patrick Hand', cursive;
-  font-size:20px;
+  font-size:15px;
   text-align:center;
   border-bottom-right-radius: 60px 5px;
   position:relative;
