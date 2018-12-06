@@ -1,8 +1,28 @@
 <?php
 $nbcol=0;
 $n=1;
-$couleur=yellowp;
+$couleur='yellow';
+$modal = ''; // declaration d'une chaine de char vide
 ?>
+
+<?php
+
+/**************************************************************************************************
+ * parametres du template :
+ * ils peuvent être passés dans l'action bazar ou bazarliste, mais sont spécifiques à ce template
+ **************************************************************************************************/
+
+ // test si on vveut affichage modal ou pas
+ $modal = $GLOBALS['wiki']->GetParameter('modal');
+ if (empty($modal)) {
+     $modal = 'non';
+ }
+
+ if ($modal==1) {
+     $modal = 'modalbox';
+ }
+?>
+
 
 <?php
 if(count($fiches)>0) : ?>
@@ -11,27 +31,38 @@ if(count($fiches)>0) : ?>
 
     <div class="containerpostit">
       <?php foreach($fiches as $fiche): ?>
+        <style>
+        .modal-header {
+            display:none;
+        }
+        </style>
+
         <!-- on choisit au hasard une couleur de post-it -->
         <?php $n = rand(1,3); ?>
         <?php
         if ($n==1) {
-            $couleur = yellowp;
+            $couleur = 'yellow';
         }
 
         if ($n==2) {
-            $couleur = pinkp;
+            $couleur = 'pink';
         }
 
         if ($n==3) {
-            $couleur = greenp;
+            $couleur = 'green';
         }
         ?>
-        <div class="postit <?php echo $couleur; ?> bazar-entry" <?php echo $fiche['html_data'];?>">
-          <a href="<?php echo $GLOBALS['wiki']->href('', $fiche['id_fiche']); ?>">
-            <h5><?php echo $fiche['bf_titre'];?></h5>
-          </a>
-          <p><?php echo $fiche['bf_aide'];?></p>
-         </div>
+        <a class="postit-link bazar-entry <?php echo $modal; ?>" title="<?php echo htmlspecialchars($fiche['bf_titre']);?>" href="<?php echo $GLOBALS['wiki']->href('', $fiche['id_fiche']); ?>" <?php echo $fiche['html_data'];?>>
+          <div class="postit <?php echo $couleur; ?>">
+            <h4><?php echo $fiche['bf_titre'];?></h4>
+            <p>
+             <?php if (isset($fiche['bf_description']) && $fiche['bf_description']!='') : ?>
+               <?php echo $fiche['bf_description'];?>
+             <?php endif; ?>
+           </p>
+          </div>
+       </a>
+
     <?php endforeach; ?>
 
   </div>
@@ -39,11 +70,26 @@ if(count($fiches)>0) : ?>
 <?php echo $pager_links;?>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Reenie+Beanie');
+/* @import url('https://fonts.googleapis.com/css?family=Reenie+Beanie'); */
+
+@import url('https://fonts.googleapis.com/css?family=Patrick+Hand');
 
 .containerpostit{
   display: flex;
   flex-wrap: wrap;
+}
+.postit-link {
+  display:block;
+  color: inherit;
+}
+.postit-link:hover {
+  text-decoration:none;
+}
+.postit-link:hover p {
+  color:#333333;
+}
+.postit-link:hover .postit {
+  box-shadow:0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
 }
 .postit{
   box-sizing: border-box;
@@ -53,13 +99,20 @@ if(count($fiches)>0) : ?>
   height:250px;
   padding: 20px 5px 5px 5px;
   border:1px solid #E8E8E8;
-  font-family: 'Reenie Beanie', cursive;
+  /* font-family: 'Reenie Beanie', cursive; */
+  font-family: 'Patrick Hand', cursive;
   font-size:20px;
   text-align:center;
   border-bottom-right-radius: 60px 5px;
   position:relative;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.16),0 2px 10px 0 rgba(0,0,0,.12);
+  -webkit-transition: all .3s ease-out;
+  -moz-transition: all .3s ease-out;
+  -o-transition: all .3s ease-out;
+  -ms-transition: all .3s ease-out;
+  transition: all .3s ease-out;
 }
 .postit:after{
   content: "";
@@ -72,13 +125,13 @@ if(count($fiches)>0) : ?>
   box-shadow:2px 15px 5px rgba(0, 0, 0, 0.40);
   transform: matrix(-1, -0.1, 0, 1, 0, 0);
 }
-.yellowp{
+.yellow{
   background: linear-gradient(135deg, #ffff88 81%,#ffff88 82%,#ffff88 82%,#ffffc6 100%);
 }
-.pinkp{
+.pink{
   background: linear-gradient(135deg, #ff879b 81%,#ff879b 82%,#ffc7d0 100%);
 }
-.greenp{
+.green{
   background: linear-gradient(135deg, #b1ff87 81%,#b1ff87 82%,#dbffc7 100%);
 }
 .postit p{
