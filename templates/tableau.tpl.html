@@ -1,0 +1,148 @@
+<?php
+/*
+  $fiches contient l ensemble des fiches
+  au cas où besoin les résultats sont paginés, $pager_links
+  $this référence l objet courant
+  or dans les templates, on doit passer par $GLOBALS['wiki'] pour accéder à cet objet.
+  Méthodes définies dans includes/yeswiki.php
+*/
+/* Paramètres
+ id
+	l'id du template dont on veut afficher les fiches
+	par défaut = 1
+ titrecolonnes
+	les titres à afficher en tête des colonnes
+	séparés par des virgules
+	par défaut, le libellé de la colonne dans le formulaire
+ champcolonnes
+	les id des champs à afficher dans le tableau
+	séparés par des virgules
+	par défaut, tous
+*/
+
+if (!function_exists('recupere_infos_cols')) {
+  // rend les informations sur les colonnes dont les id sont donnés en paramètre
+  // le tableau retourné a la structure id => (nature, label)
+	function recupere_infos_cols ($id_typeannonce) {
+		$natures = [];
+		$titres = [];
+		$ids = [];
+		$id2natures = [];
+		// on recupere les infos liées à ce type de fiche
+		$fichebazar['form'] =  baz_valeurs_formulaire($id_typeannonce);
+
+		// on parcourt le tableau des valeurs pour récupérer les ids
+		for ($i = 0; $i < count($fichebazar['form']['template']); ++$i) {
+			$natures[] = $fichebazar['form']['template'][$i][0];
+			$titres[] = $fichebazar['form']['template'][$i][2];
+			$ids[] = $fichebazar['form']['prepared'][$i]['id'];  // dans le tableau prepared les identifiants sont dejà formates ex imagebf_image
+			$id2natures[$fichebazar['form']['prepared'][$i]['id']] = $fichebazar['form']['template'][$i][0];
+		}
+		return array ($natures,$ids,$titres,$id2natures);
+	}
+}
+
+if (count($fiches)>0) {
+// dans l'immédiat on limite à l'affichage d'un seul formulaire à la fois
+	$formtype = $GLOBALS['wiki']->GetParameter('id');
+	if ($formtype == '' or strpos($formtype, ',')) {
+		$formtype = "1";
+	}
+	$infosColonne = recupere_infos_cols($formtype);
+
+  $titrecolonnes = $GLOBALS['wiki']->GetParameter('titrecolonnes');
+  if (empty($titrecolonnes)) {
+    // si pas de titre, on affiche tous les champs
+    $tabtitrecolonnes = $infosColonne[2];
+  } else {
+    // explode fonction php qui transforme la chaine de caractère en tableau
+    $tabtitrecolonnes = explode(',', $titrecolonnes);
+    // on supprime les espaces avec la fonction trim
+    $tabtitrecolonnes = array_map('trim', $tabtitrecolonnes);
+  }
+  $nbcols = count($tabtitrecolonnes);
+
+  $champcolonnes = $GLOBALS['wiki']->GetParameter('champcolonnes');
+  if (empty($champcolonnes)) {
+    // si pas de champs, on affiche tous les champs
+    $tabchampscolonnes = $infosColonne[1];
+  } else {
+    // explode fonction php qui transforme la chaine de caractère en tableau
+    $tabchampscolonnes = explode(',', $champcolonnes);
+    // on supprime les espaces avec la fonction trim
+    $tabchampscolonnes = array_map('trim', $tabchampscolonnes);
+  }
+?>
+
+
+
+    <?php echo $info_res; // affiche le nombre de résultats ?>
+<!--
+l'id doit être unique - dans le cas où il y a plusieurs tableaux sur la même page
+ , on utilise $param['nbbazarliste'] qui s'incrémente à chaque fois qu'on appelle bazarliste
+ pour différencier les différents tableaux table_1 table_2
+ -->
+    <table id="table_<?php echo $param['nbbazarliste']; ?>" class="table table-condensed display">
+        <thead>
+          <tr>
+                <?php
+                // on affiche les titres de colonnes
+                foreach ($tabtitrecolonnes as $titre): ?>
+                   <th><?php echo $titre; ?></th>
+                <?php endforeach; ?>
+            </tr>
+        </thead>
+        <tbody>
+
+    <?php
+    foreach($fiches as $fiche): ?>
+        <tr>
+            <?php
+            // on affiche les valeurs pour chaque colonne
+            foreach($tabchampscolonnes as $champ) {
+              if (isset($fiche[$champ])) {
+                // TODO : a partir de la nature du champ, formatter le contenu comme il faut (image, lien, checkbox)
+                $val = $fiche[$champ];
+              } else {
+                $val = '';
+              }
+              echo '<td>'.$val.'</td>'."\n";
+            }
+            ?>
+        </tr>
+    <?php
+    endforeach; ?>
+      </tbody>
+    </table>
+    <?php
+    $js = '
+    $(document).ready( function () {
+      $("#table_'.$param['nbbazarliste'].'").DataTable({
+        language: {
+           processing:     "Traitement en cours...",
+           search:         "Rechercher&nbsp;:",
+           lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+           info:           "Affichage de l\'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+           infoEmpty:      "Affichage de l\'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+           infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+           infoPostFix:    "",
+           loadingRecords: "Chargement en cours...",
+           zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+           emptyTable:     "Aucune donnée disponible dans le tableau",
+           paginate: {
+               first:      "Premier",
+               previous:   "Pr&eacute;c&eacute;dent",
+               next:       "Suivant",
+               last:       "Dernier"
+           },
+           aria: {
+               sortAscending:  ": activer pour trier la colonne par ordre croissant",
+               sortDescending: ": activer pour trier la colonne par ordre décroissant"
+           }
+         }
+      });
+  });';
+  $GLOBALS['wiki']->addCSSFile('themes/tools/bazar/styles/datatables.min.css');
+  $GLOBALS['wiki']->addJavascriptFile('themes/tools/bazar/javascripts/datatables.min.js');
+  $GLOBALS['wiki']->addJavascript($js);
+}
