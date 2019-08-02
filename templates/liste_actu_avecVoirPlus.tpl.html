@@ -1,0 +1,73 @@
+<?php
+if(count($fiches)>0) :
+$count = $nbelem = $nbpropose = $nbdemand = 0;
+$visibleelems = $GLOBALS['wiki']->getParameter('visibleelements');
+if (!empty($visibleelems)) {
+	$GLOBALS['wiki']->addJavascript('$(".next-results .btn").on("click", function() {
+		$this = $(this);
+		$this.parent().nextAll(":lt("+($this.data("nb")+1)+")").removeClass("hide");
+		$this.parent().addClass("hide");
+	})');
+}
+$hideelem = false;
+$output = '';
+ ?>
+<div class="BlocActu">
+    <?php
+	foreach($fiches as $fiche): ?>
+		<?php 
+		$count = $count + 1;
+		$nbelem = $nbelem + 1;
+
+		$output .= '<div class="'.($hideelem ? 'hide ' : '').'bazar-entry BlocActu" '.$fiche['html_data'].'>';
+		$output .= $fiche['bf_titre'];
+		
+		setlocale(LC_TIME, 'fr_FR.utf8','fra');
+		$d = new DateTime($fiche['date_creation_fiche']);
+		$d = date_format($d, 'd M');
+		$d = str_replace(
+			array('Feb', 'Apr', 'May', 'Jun', 'Jul', 'Aug'),
+			array('Fév', 'Avr', 'Mai', 'Juin', 'Juil', 'Août'),
+			$d
+		);
+		$d = str_replace(' ', '<br />', $d);
+		$output .= '<div class="date-echange">'.$d.'</div>';
+		$nom_createur = $fiche['createur'];
+		if ($fiche['createur'] == 'VillE')
+			$nom_createur = 'Ville de Villeurbanne';
+		else
+		{
+			if ($fiche_createur = $GLOBALS['wiki']->LoadSingle("SELECT LIBELLE_TIERS FROM annuaire_assos WHERE tag = '".$fiche['createur']."';"))
+				$nom_createur = $fiche_createur['LIBELLE_TIERS'];
+		}
+		$output .= '<div class="infos-echange"><a class="structure-echange" href="';
+		$output .= $GLOBALS['wiki']->href('', $fiche['createur']);
+		$output .= '">';
+		$output .= $nom_createur;
+		$output .= '</a>';
+		
+		$output .= $GLOBALS['wiki']->href('', $fiche['id_fiche']);
+		$output .= '">';
+
+		$output .= '</a>';
+
+
+		$output .= '</div></div>';
+			
+		if (!empty($visibleelems) and $visibleelems == $nbelem and $count != count($fiches)) {
+			$output .= '<div class="'.($hideelem ? 'hide ' : '').'next-results text-center"><a class="btn btn-default" data-nb="'.$visibleelems.'">plus de résultats</a></div>';
+			if (!$hideelem) {
+				$hideelem = true;
+			}
+			$nbelem = 0;
+		}
+
+			?>
+    <?php
+	endforeach;
+	
+	echo $output; ?>
+	</div>
+    <?php echo $pager_links;?>
+    <?php
+endif; ?>

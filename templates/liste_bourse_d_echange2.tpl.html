@@ -1,0 +1,109 @@
+<?php
+if(count($fiches)>0) :
+$count = $nbelem = $nbpropose = $nbdemand = 0;
+$visibleelems = $GLOBALS['wiki']->getParameter('visibleelements');
+if (!empty($visibleelems)) {
+	$GLOBALS['wiki']->addJavascript('$(".next-results .btn").on("click", function() {
+		$this = $(this);
+		$this.parent().nextAll(":lt("+($this.data("nb")+1)+")").removeClass("hide");
+		$this.parent().addClass("hide");
+	})');
+}
+$hideelem = false;
+$output = '';
+ ?>
+<div class="BlocListeBourseEchange">
+    <?php
+	foreach($fiches as $fiche): ?>
+		<?php
+		$count = $count + 1;
+		$nbelem = $nbelem + 1;
+		if ($fiche['listeListeTypeechange']=="Propos") {
+			$nbpropose = $nbpropose + 1;
+		} else {
+			$nbdemand = $nbdemand + 1;
+		}
+		$output .= '<div class="'.($hideelem ? 'hide ' : '').'bazar-entry ItemBourseEchange v-center text-center" '.$fiche['html_data'].'>';
+
+			setlocale(LC_TIME, 'fr_FR.utf8','fra');
+			$d = new DateTime($fiche['date_maj_fiche']);
+			$d = date_format($d, 'd M');
+			$d = str_replace(
+				array('Feb', 'Apr', 'May', 'Jun', 'Jul', 'Aug'),
+				array('Fév', 'Avr', 'Mai', 'Juin', 'Juil', 'Août'),
+				$d
+			);
+			$d = str_replace(' ', '<br />', $d);
+			$output .= '<div class="date-echange">'.$d.'</div>';
+			$nom_createur = $fiche['createur'];
+			if ($fiche['createur'] == 'VillE')
+				$nom_createur = 'Ville de Villeurbanne';
+			else
+			{
+				if ($fiche_createur = $GLOBALS['wiki']->LoadSingle("SELECT LIBELLE_TIERS FROM annuaire_assos WHERE tag = '".$fiche['createur']."';"))
+					$nom_createur = $fiche_createur['LIBELLE_TIERS'];
+			}
+
+			$output .= '<div class="infos-echange"><a class="structure-echange" href="';
+			$output .= $GLOBALS['wiki']->href('', $fiche['createur']);
+			$output .= '">';
+			$output .= $nom_createur;
+			$output .= '</a>';
+			if ($fiche['listeListeTypeechange']=="Propos") {
+				$texte_type_echange = 'PROPOSE';
+			} else {
+				$texte_type_echange = 'RECHERCHE';
+			}
+            $output .= '<div class="type-echange">'.$texte_type_echange.'</div>';
+			$output .= '<a class="titre-echange" href="';
+			$output .= $GLOBALS['wiki']->href('', $fiche['id_fiche']);
+			$output .= '">';
+			$output .= $fiche['bf_titre'];
+			$output .= '</a><br /><br />';
+			$output .= '<a class="fiche-echange" href="'.$GLOBALS['wiki']->href('', $fiche['id_fiche']).'">Voir plus</a> | ';
+
+			if (!empty($fiche['bf_contact']) and filter_var($fiche['bf_contact'], FILTER_VALIDATE_EMAIL)){
+				$email = $fiche['bf_contact'];
+			} else {
+				$fichelieu = $GLOBALS['wiki']->LoadSingle('SELECT email FROM '.$GLOBALS['wiki']->config['table_prefix'].'users WHERE name = "'.$fiche['createur'].'";');
+				$email = $fichelieu['email'];
+			}
+			$output .= '<a class="mail-echange" href="mailto:'.$email.'">Répondre</a>';
+
+			$output .= '</div></div>';
+
+			if (!empty($visibleelems) and $visibleelems == $nbelem and $count != count($fiches)) {
+				$output .= '<div class="'.($hideelem ? 'hide ' : '').'next-results text-center"><a class="btn btn-default" data-nb="'.$visibleelems.'">plus de résultats</a></div>';
+				if (!$hideelem) {
+					$hideelem = true;
+				}
+				$nbelem = 0;
+			}
+
+			?>
+    <?php
+	endforeach;
+	$class = '';
+	if ($fiche['checkboxListeTypecategorieechange']=='Benev' or $fiche['checkboxListeTypecategorieechange']=='Compe') {
+		$class= 'sum-benevolat';
+	} elseif ($fiche['checkboxListeTypecategorieechange']=='Loca') {
+		$class = 'sum-locaux';
+	} else {
+		$class= 'sum-materiel';
+	}
+	echo '<div class="summary '.$class.'"><div class="row v-center"><div class="col-xs-4 demands">'.$nbdemand.'<br />demande';if($nbdemand > 1) {echo 's';}
+	echo '</div><div class="col-xs-4">';
+	if ($fiche['checkboxListeTypecategorieechange']=='Benev' or $fiche['checkboxListeTypecategorieechange']=='Compe') {
+		echo '<img class="img-responsive" src="themes/tools/bazar/images/picto-benevolat.png" alt="picto-benevolat">';
+	} elseif ($fiche['checkboxListeTypecategorieechange']=='Loca') {
+		echo '<img class="img-responsive" src="themes/tools/bazar/images/picto-locaux.png" alt="picto-locaux">';
+	} else {
+		echo '<img class="img-responsive" src="themes/tools/bazar/images/picto-materiel.png" alt="picto-materiel">';
+	}
+	echo '</div><div class="col-xs-4 offers">'.$nbpropose.'<br />proposition';if($nbpropose > 1) {echo 's';}
+	echo '</div></div></div>';
+	echo $output; ?>
+	</div>
+    <?php echo $pager_links;?>
+    <?php
+endif; ?>

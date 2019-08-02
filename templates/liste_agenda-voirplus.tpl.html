@@ -1,0 +1,141 @@
+<?php
+/**************************************************************************************************
+ * parametres du template :
+ * ils peuvent être passés dans l'action bazar ou bazarliste, mais sont spécifiques à ce template
+ **************************************************************************************************/
+
+ // test si on veut affichage de toutes les activités (tout) (par défaut) ou seulement celles à venir (futur)
+ $agenda = $GLOBALS['wiki']->GetParameter('agenda');
+ if (empty($agenda)) {
+     $agenda = tout;
+ }
+
+ if ($agenda==futur) {
+
+      if (!function_exists('date_periode')) {
+       function date_periode($fiche) {
+          $nbjour = 290;
+          $datejour = time();
+          $datemax = $datejour + ($nbjour*24*60*60);  // date max � J+ nb de jours
+          $datefiche = strtotime($fiche['bf_date_debut_evenement']);
+        $datefin = strtotime($fiche['bf_date_fin_evenement']);
+          if (($datefiche >=$datejour  && $datefiche <=$datemax ) || ($datefin >=$datejour  && $datefin <=$datemax )) {
+              return true;
+              }
+           else  {
+               return  false;
+          }
+      }
+      }
+      if (!function_exists('date_compare')) {
+          //tri par ordre chronologique
+           function date_compare($a, $b)
+           {
+             $t1 = strtotime($a['bf_date_debut_evenement']);    // strtotime = fonction qui transforme une chaine de caractere en date informatque (= un chiffre calcul� depuis 1970)
+             $t2 = strtotime($b['bf_date_debut_evenement']);
+           return $t1 - $t2;
+         }
+      }
+        $fiches = array_filter($fiches, "date_periode");
+        usort($fiches, 'date_compare');  // http://php.net/manual/fr/function.usort.php (si on veut avoir mal au crane)
+ }
+?>
+ 
+ 
+ 
+ 
+ 
+<?php
+if(count($fiches)>0) :
+$count = $nbelem = 0;
+$visibleelems = $GLOBALS['wiki']->getParameter('visibleelements');
+if (!empty($visibleelems)) {
+	$GLOBALS['wiki']->addJavascript('$(".next-results .btn").on("click", function() {
+		$this = $(this);
+		$this.parent().nextAll(":lt("+($this.data("nb")+1)+")").removeClass("hide");
+		$this.parent().addClass("hide");
+	})');
+}
+$hideelem = false;
+$output = '';
+ ?>
+<div>
+    <?php
+	foreach($fiches as $fiche): ?>
+		<?php 
+		$count = $count + 1;
+		$nbelem = $nbelem + 1;
+
+
+		$output .= '<div class="'.($hideelem ? 'hide ' : '').'" '.$fiche['html_data'].'>';
+		
+		setlocale(LC_TIME, 'fr_FR.utf8','fra');
+		$mois = new DateTime($fiche['bf_date_debut_evenement']);
+		$mois = date_format($mois, 'M');
+		$mois = str_replace(
+			array('Feb', 'Apr', 'May', 'Jun', 'Jul', 'Aug'),
+			array('Fév', 'Avr', 'Mai', 'Juin', 'Juil', 'Août'),
+			$mois
+		);
+		$mois = str_replace(' ', ' ', $mois);
+				$jour = new DateTime($fiche['bf_date_debut_evenement']);
+		$jour = date_format($jour, 'd');
+				$annee = new DateTime($fiche['bf_date_debut_evenement']);
+		$annee = date_format($annee, 'Y');
+
+		
+		$titre = $fiche['bf_titre'];
+		$structure = baz_valeurs_fiche($fiche['listefiche6']); 
+		$heure = new DateTime($fiche['bf_date_debut_evenement']);
+		$heure = date_format($heure, ' à H:i');
+		$output .= '<div class="row whitebg card-agenda bazar-entry">';
+		$output .= '<div class="col-sm-2 col-md-3">';
+		$output .= '<div class="ItemAgendaleft v-center">';		
+		$output .= '<div class="date-container	">';
+		$output .= '<div>' .$jour.'</div></br>';
+		$output .= '<div style="color:#e1be3b;text-transform:uppercase;font-size:1.1em;margin-top:-20px;margin-bottom:-20px">' .$mois.'</div></br>';
+		$output .= '<div>' .$annee.'</div></br>';
+		$output .= '</div>';		
+		$output .= '</div>';
+		$output .= '</div>';	
+		$output .= '<div class="col-sm-6 col-md-9">';
+		$output .= '<div class="ItemAgendaright v-center">';		
+		$output .= '<div class="agenda-container	">';	
+		$output .= '<a style="color:rgb(255,109,102);font-family:Montserrat;font-size:15px;font-weight:bold" href="';
+		$output .= $GLOBALS['wiki']->href('', $fiche['id_fiche']);
+		$output .= '">';
+		$output .= $fiche['bf_titre'];
+		$output .= '</a>';
+		$output .= '<a href="';
+		$output .= $GLOBALS['wiki']->href('', $structure['id_fiche']);
+		$output .= '">';
+		$output .= '<p style="font-size:0.85em;line-height:50%;">  <img src="./themes/tools/bazar/images/placeholder.svg" alt="marker" width="20px">' .$structure['bf_titre'].'</p>';		
+		$output .= '</a>';		
+		$output .= '<p style="font-size:0.85em;line-height:50%;margin-top:-5px"><img src="./themes/tools/bazar/images/picto-horloge.jpg" alt="hour" width="20px">' .$heure.'</p>';		
+		$output .= '</div>';
+		$output .= '</div>';	
+		$output .= '</div>';			
+		$output .= '</div>';
+		$output .= '</div>';	
+	
+	
+	
+	
+			
+			if (!empty($visibleelems) and $visibleelems == $nbelem and $count != count($fiches)) {
+				$output .= '<div class="'.($hideelem ? 'hide ' : '').'next-results text-center"><a class="btn btn-default" data-nb="'.$visibleelems.'">plus de résultats</a></div>';
+				if (!$hideelem) {
+					$hideelem = true;
+				}
+				$nbelem = 0;
+			}
+
+			?>
+    <?php
+	endforeach;
+
+	echo $output; ?>
+	</div>
+    <?php echo $pager_links;?>
+    <?php
+endif; ?>
