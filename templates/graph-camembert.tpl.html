@@ -1,0 +1,43 @@
+<?php 
+global $wiki;
+if (count($fiches)>0) :
+    $title = $wiki->getParameter('title');
+    $field = $wiki->getParameter('field');
+    $listname = preg_replace('/^(checkbox|liste)/', '', $field);
+    $list = baz_valeurs_liste($listname);
+
+    $total=[];
+    foreach ($list['label'] as $id => $val) {
+        $total[$id] = 0;
+    }
+    foreach ($fiches as $fiche) {
+        if (isset($fiche[$field])) {
+            $t = explode(',', $fiche[$field]);
+            foreach($t as $key) {
+                $total[$key]++;
+            }
+        }
+    }
+    ksort($total);
+    $list['label'] = array_map('addslashes', $list['label']);
+    ksort($list['label']);
+    $wiki->addJavascriptFile('https://cdn.jsdelivr.net/npm/chart.xkcd@1/dist/chart.xkcd.min.js');
+    $js = "
+document.addEventListener('DOMContentLoaded', function(event) { 
+    const svgPie".$GLOBALS['_BAZAR_']['nbbazarliste']." = document.querySelector('.pie-chart".$GLOBALS['_BAZAR_']['nbbazarliste']."');
+    new chartXkcd.Pie(svgPie".$GLOBALS['_BAZAR_']['nbbazarliste'].", {
+        title: '".addslashes($title)."',
+        data: {
+        labels:['".implode("', '", array_values($list['label']))."'],
+        datasets: [{
+            data: [".implode(", ", $total)."],
+        }]
+        }, 
+    })
+    });
+  ";
+    $wiki->addJavascript($js);
+
+?>
+<svg class="pie-chart<?php echo $GLOBALS['_BAZAR_']['nbbazarliste']; ?>"></svg>
+<?php endif; ?>

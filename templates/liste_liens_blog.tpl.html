@@ -1,0 +1,18 @@
+<?php
+if(count($fiches)>0) : ?>
+    <?php
+    foreach($fiches as $fiche): ?>
+        <article class="bazar-entry" <?php echo $fiche['html_data'];?>>
+          <a href="<?php echo $GLOBALS['wiki']->href('', $fiche['id_fiche']); ?>">
+            <h4><?php echo $fiche['bf_titre']; ?></h4>
+          </a>
+          <small style="color:#ccc"><?php echo 'Le '.date('d.m.Y à H:i', strtotime($fiche['date_creation_fiche'])); ?></small>
+          <p class="resume">
+             <?php echo $GLOBALS['wiki']->Format($fiche['bf_chapeau']); ?>
+          </p>
+          <hr>
+        </article>
+        <?php
+    endforeach; ?>
+    <?php
+endif;
