@@ -28,17 +28,25 @@ if (!function_exists('recupere_infos_cols')) {
 		$titres = [];
 		$ids = [];
 		$id2natures = [];
+		$id2valeursliste = [];
 		// on recupere les infos liées à ce type de fiche
 		$fichebazar['form'] =  baz_valeurs_formulaire($id_typeannonce);
 
 		// on parcourt le tableau des valeurs pour récupérer les ids
 		for ($i = 0; $i < count($fichebazar['form']['template']); ++$i) {
-			$natures[] = $fichebazar['form']['template'][$i][0];
+			$nature = $fichebazar['form']['template'][$i][0];
+			$natures[] = $nature;
 			$titres[] = $fichebazar['form']['template'][$i][2];
 			$ids[] = $fichebazar['form']['prepared'][$i]['id'];  // dans le tableau prepared les identifiants sont dejà formates ex imagebf_image
 			$id2natures[$fichebazar['form']['prepared'][$i]['id']] = $fichebazar['form']['template'][$i][0];
+			if (($nature == "liste") or ($nature == "radio") or ($nature == "checkbox")){
+				$valeursliste = baz_valeurs_liste($fichebazar['form']['template'][$i][1]);
+			} else {
+				$valeursliste = '';
+			}
+			$id2valeursliste[$fichebazar['form']['prepared'][$i]['id']] = $valeursliste;
 		}
-		return array ($natures,$ids,$titres,$id2natures);
+		return array ($natures,$ids,$titres,$id2natures,$id2valeursliste);
 	}
 }
 
@@ -94,15 +102,27 @@ l'id doit être unique - dans le cas où il y a plusieurs tableaux sur la même 
         </thead>
         <tbody>
 
-    <?php
-    foreach($fiches as $fiche): ?>
-        <tr>
-            <?php
-            // on affiche les valeurs pour chaque colonne
-            foreach($tabchampscolonnes as $champ) {
-              if (isset($fiche[$champ])) {
+	<?php
+	foreach($fiches as $fiche): ?>
+			<tr>
+				<?php
+				// on affiche les valeurs pour chaque colonne
+				foreach($tabchampscolonnes as $champ) {
+					if (isset($fiche[$champ])) {
                 // TODO : a partir de la nature du champ, formatter le contenu comme il faut (image, lien, checkbox)
-                $val = $fiche[$champ];
+					 $nature = $infosColonne[3][$champ];
+					 if (($nature == 'liste') or ($nature == 'checkbox') or ($nature == 'radio')) {
+						$valeursliste = $infosColonne[4][$champ];
+						$valeurschamp = explode(',',$fiche[$champ]);
+						$val = '';
+						$prefixe = '';
+						foreach($valeurschamp as $idliste) {
+							$val .= $prefixe . $valeursliste["label"][$idliste];
+							$prefixe = ', ';
+						}
+					 } else {
+						$val = $fiche[$champ];
+					 }
               } else {
                 $val = '';
               }
