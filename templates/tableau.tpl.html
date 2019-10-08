@@ -93,7 +93,6 @@ if (count($fiches)>0) {
 	$checkboxEnCols = $GLOBALS['wiki']->GetParameter('checkboxEnColonnes');
 	$checkboxEnColonnes['0µ0'] = 0; // False (0µ0 parce que c'est une chaîne improbable dans un titre de champ)
 	if ((!empty($checkboxEnCols)) and $checkboxEnCols != "non") {
-		echo '<br/>$checkboxEnCols = ' . $checkboxEnCols . '<br/>';
 		$i = -1;
 		foreach ($infosColonne[0] as $nature){
 			$i ++;
