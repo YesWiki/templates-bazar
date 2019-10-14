@@ -1,0 +1,244 @@
+<?php if( count($fiches)>0 ) : ?>
+  <div class="timeline-container;">
+    <div class="timeline">
+<?php
+$moiscourt = [
+  '01' => 'jan',
+  '02' => 'fév',
+  '03' => 'mars',
+  '04' => 'avr',
+  '05' => 'mai',
+  '06' => 'juin',
+  '07' => 'juil',
+  '08' => 'août',
+  '09' => 'sept',
+  '10' => 'oct',
+  '11' => 'nov',
+  '12' => 'déc',
+];
+if (!function_exists('date_compare')) {
+  //tri par ordre antéchronologique
+  function date_compare($a, $b)
+  {
+      $t1 = strtotime($a['bf_date_debut_evenement']);
+      $t2 = strtotime($b['bf_date_debut_evenement']);
+      return $t2 - $t1;
+  }
+}
+
+  usort($fiches, 'date_compare');
+  $cat = baz_valeurs_liste('ListeCategories');
+  $statut = baz_valeurs_liste('ListeStatutDeLaDecision');
+  $inst = baz_valeurs_liste('ListeInstances');
+  $output = '';
+  $first = true;
+  foreach ($fiches as $key => $fiche) {
+    $date = explode('-', $fiche['bf_date_debut_evenement']);
+    $annee = $date[0];
+    $mois =  $date[1];
+    $jour = explode('T', $date[2]);
+    $jour = $jour[0];
+    // premier passage
+    if ( !isset($anneeencours) || $anneeencours > $annee ) {
+      if ($first) {
+        $first = false;
+      } else {
+        $output .= '</div><!--/.timeline__group -->';
+      }
+      $anneeencours = $annee;
+      $output .= '<div class="timeline__group">
+        <span class="timeline__year">'.$anneeencours.'</span>';
+    }
+    $tab = baz_valeurs_formulaire($fiche['id_typeannonce']);
+    
+$categories = explode(',', $fiche['checkboxListeCategories']);
+$catlabel = array();
+foreach($categories as $c) {
+  $catlabel[] = '#'.$cat['label'][$c];
+}
+$catlab = implode(', ', $catlabel);
+
+    $output .=  '
+<div class="timeline__box bazar-entry" '.$fiche['html_data'].'>
+  <div class="timeline__date">
+    <span class="timeline__day">'.$jour.'</span>
+    <span class="timeline__month">'.$moiscourt[$mois].'</span>
+  </div>
+  <div class="timeline__post">
+    <div class="timeline__content">
+      <div class="categorie pull-left">'.$catlab.'</div>
+      <div class="statut pull-right">'.$statut['label'][$fiche['listeListeStatutDeLaDecision']].'</div>
+      <div class="clearfix"></div>
+      <h3><a href="'.$GLOBALS['wiki']->href('', $fiche['id_fiche']).'">'.$fiche['bf_titre'].'</a> <small>'.$inst['label'][$fiche['listeListeInstances']].'</small></h3>
+        '.$fiche['bf_description'].'
+      <a class="btn btn-xs pull-right btn-default" href="'.$GLOBALS['wiki']->href('edit', $fiche['id_fiche']).'"><i class="glyphicon glyphicon-pencil icon-pencil"></i> Modifier</a>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</div>';
+
+  }
+  if (!$first) {
+    $output .= '</div><!--/.timeline__group -->';
+  }
+  echo $output; ?>
+  </div>
+</div>
+<style>
+.timeline-container {
+  position:relative;
+  margin:1em 0;
+}
+  .timeline {
+  --uiTimelineMainColor: var(--timelineMainColor, #222);
+  --uiTimelineSecondaryColor: var(--timelineSecondaryColor, #fff);
+
+  position: relative;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.timeline:before {
+  content: "";
+  width: 4px;
+  height: 100%;
+  background-color: var(--uiTimelineMainColor);
+
+  position: absolute;
+  top: 0;
+}
+.categorie, .statut {
+  font-size:.8em;
+  text-transform:uppercase;
+  color:#555;
+}
+.categorie {
+  font-weight:bold;
+}
+.timeline__group {
+  position: relative;
+}
+
+.timeline__group:not(:first-of-type) {
+  margin-top: 4rem;
+}
+
+.timeline__year {
+  padding: 0.5rem 1.5rem;
+  color: var(--uiTimelineSecondaryColor);
+  background-color: var(--uiTimelineMainColor);
+
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+h3 a {
+  color:inherit;
+}
+.timeline__box {
+  position: relative;
+}
+
+.timeline__box:not(:last-of-type) {
+  margin-bottom: 30px;
+}
+
+.timeline__box:before {
+  content: "";
+  width: 100%;
+  height: 2px;
+  background-color: var(--uiTimelineMainColor);
+
+  position: absolute;
+  left: 0;
+  z-index: -1;
+}
+
+.timeline__date {
+  min-width: 65px;
+  position: absolute;
+  left: 0;
+
+  box-sizing: border-box;
+  padding: 0.5rem 1.5rem;
+  text-align: center;
+
+  background-color: var(--uiTimelineMainColor);
+  color: var(--uiTimelineSecondaryColor);
+}
+
+.timeline__day {
+  font-size: 2rem;
+  font-weight: 700;
+  display: block;
+}
+
+.timeline__month {
+  display: block;
+  font-size: 0.8em;
+  text-transform: uppercase;
+}
+
+.timeline__post {
+  padding: 1.5rem 2rem;
+  border-radius: 2px;
+  border-left: 3px solid var(--uiTimelineMainColor);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+  background-color: var(--uiTimelineSecondaryColor);
+}
+
+@media screen and (min-width: 641px) {
+  .timeline:before {
+    left: 30px;
+  }
+
+  .timeline__group {
+    padding-top: 55px;
+  }
+
+  .timeline__box {
+    padding-left: 80px;
+  }
+
+  .timeline__box:before {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .timeline__date {
+    top: 50%;
+    margin-top: -27px;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .timeline:before {
+    left: 0;
+  }
+
+  .timeline__group {
+    padding-top: 40px;
+  }
+
+  .timeline__box {
+    padding-left: 20px;
+    padding-top: 70px;
+  }
+
+  .timeline__box:before {
+    top: 90px;
+  }
+
+  .timeline__date {
+    top: 0;
+  }
+}
+
+.timeline {
+  --timelineMainColor: #bed64a;
+}
+
+</style>
+<?php else: ?>
+<i>Pas de décisions prises, pour cette fois là.</i><br><br>
+<?php endif; ?>
