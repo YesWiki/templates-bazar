@@ -11,13 +11,13 @@ Attention, certains templates nécessitent l'ajout de dossiers supplémentaires 
     - bf_description
 
  - **glossaire.tpl.html** : présentation sous forme d'annuaire alphabétique de défintions de mots (un glossaire quoi ;-). Quand on survol le mot, sa définition apparaît, on clique sur le mot, on ouvre une page avec sa défintion. Le formulaire idéal se compose des champs suivants (le label permet de cacher le titre afin d'éviter qu'il ne s'affiche deux fois) : 
-```
-labelhtml*** *** *** <div style="display:none">
-texte***bf_titre***Le mot***35***35*** *** *** ***1***0***
-labelhtml*** *** *** </div> <!-- ferme le div .hide -->***
-textelong***bf_description***Définition***10***2*** *** ***wiki *** *** ***
-lien_internet***bf_url***Lien pour en savoir plus***40***255***http://*** *** ***0***0
-```
+       ```
+       labelhtml*** *** *** <div style="display:none">
+       texte***bf_titre***Le mot***35***35*** *** *** ***1***0***
+       labelhtml*** *** *** </div> <!-- ferme le div .hide -->***
+       textelong***bf_description***Définition***10***2*** *** ***wiki *** *** ***
+       lien_internet***bf_url***Lien pour en savoir plus***40***255***http://*** *** ***0***0
+       ```
    
   - **material-card.tpl.html** : présentation sous forme de vignettes graphiques souvent utilisées pour réaliser des annuaires visuels 
     - pour ce template, il est nécessaire d'ajouter un dossier javascripts contenant le fichier lazyload.min.js et un autre dossier nommé styles avec le fichier material-card.css. Les champs nécessaires minimaux sont
