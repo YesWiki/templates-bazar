@@ -11,7 +11,7 @@ Attention, certains templates nécessitent l'ajout de dossiers supplémentaires 
     - bf_description
 
  - **glossaire.tpl.html** : présentation sous forme d'annuaire alphabétique de défintions de mots (un glossaire quoi ;-). Quand on survol le mot, sa définition apparaît, on clique sur le mot, on ouvre une page avec sa défintion. Le formulaire idéal se compose des champs suivants (le label permet de cacher le titre afin d'éviter qu'il ne s'affiche deux fois) : 
-> - labelhtml*** *** *** <div style="display:none">
+> '- labelhtml*** *** *** <div style="display:none">'
 > - texte***bf_titre***Le mot***35***35*** *** *** ***1***0***
 > - labelhtml*** *** *** </div> <!-- ferme le div .hide -->***
 > - textelong***bf_description***Définition***10***2*** *** ***wiki *** *** ***
