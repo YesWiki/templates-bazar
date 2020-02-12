@@ -31,8 +31,8 @@
               } ?>
 
               <?php echo $fiche['bf_titre'];?> </h4>
-              <?php if (isset($fiche['bf_soustitre']) && !empty($fiche['bf_soustitre'])):?>
-                  <small class='accordion-subtitle'><?php echo nl2br(strip_tags(substr($fiche['bf_soustitre'], 0, 280))) . (strlen($fiche['bf_soustitre']) > 280 ? '...' : '');?></small>
+              <?php if (isset($fiche['soustitre']) && !empty($fiche['soustitre'])):?>
+                  <small class='accordion-subtitle'><?php echo nl2br(strip_tags(substr($fiche['soustitre'], 0, 280))) . (strlen($fiche['soustitre']) > 280 ? '...' : '');?></small>
               <?php else : ?>
               <?php endif; ?>
           </div>
