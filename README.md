@@ -102,4 +102,9 @@ lien_internet***bf_url***Lien pour en savoir plus***40***255***http://*** *** **
      - bf_date_article
      - bf_chapo
      - bf_image
+ - **photo-oxygen.tpl.html** : Ce template permet d'afficher une galerie de photos :
+     Les champs nécessaires minimaux sont : 
+     - bf_image
+     - bf_auteur
+    
 
