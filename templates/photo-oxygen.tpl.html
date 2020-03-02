@@ -1,0 +1,246 @@
+<?php
+
+/**************************************************************************************************
+ * parametres du template :
+ * ils peuvent être passés dans l'action bazar ou bazarliste, mais sont spécifiques à ce template
+ **************************************************************************************************/
+
+// largeur vignette
+$thumbwidth = $GLOBALS['wiki']->GetParameter('thumbwidth');
+if (empty($thumbwidth)) {
+    $thumbwidth = 350;
+}
+// hauteur vignette
+$thumbheight = $GLOBALS['wiki']->GetParameter('thumbheight');
+if (empty($thumbheight)) {
+    $thumbheight = 280;
+}
+
+// redimensionnent vignette :
+//   aux dimensions exactes, quitte à rogner l'image (crop)
+//   ou garder dimensions originales à l'intérieur des dimensions (fit)
+$thumbresize = $GLOBALS['wiki']->GetParameter('thumbresize');
+if (empty($thumbresize)) {
+    $thumbresize = 'crop';
+}
+
+// ajouter le bouton de telechargement entre les images
+$downloadbtn = $GLOBALS['wiki']->GetParameter('downloadbtn');
+if (empty($downloadbtn) or $downloadbtn != '1' ) {
+    $downloadbtn = false;
+}
+
+// largeur image plein écran
+$bigwidth = $GLOBALS['wiki']->GetParameter('bigwidth');
+if (empty($bigwidth)) {
+    $bigwidth = 1024;
+}
+
+// hauteur image plein écran
+$bigheight = $GLOBALS['wiki']->GetParameter('bigheight');
+if (empty($bigheight)) {
+    $bigheight = 768;
+}
+
+// redimensionnent image plein écran :
+//   aux dimensions exactes, quitte à rogner l'image (crop)
+//   ou garder dimensions originales à l'intérieur des dimensions (fit)
+$bigresize = $GLOBALS['wiki']->GetParameter('bigresize');
+if (empty($bigresize)) {
+    $bigresize = 'fit';
+}
+
+
+/************************************************************************************************
+ * code du template
+ ************************************************************************************************/
+if (count($fiches) > 0) :
+    // mode ramdom des fiches
+    if ($GLOBALS['wiki']->GetParameter('random') == "1") {
+      shuffle($fiches);
+    }
+
+    // un identifiant unique pour chaque appel dans une meme page
+    $GLOBALS['nbgalleries'] = (isset($GLOBALS['nbgalleries']) ? $GLOBALS['nbgalleries'] + 1 : 1);
+    $duration = 200;
+?>
+
+<div  id='gallery<?php echo $GLOBALS['nbgalleries']; ?>' class="oxygen-gallery container-fluid">
+  <div class="row">
+  <?php foreach ($fiches as $fiche) : ?>
+    <?php
+    if (isset($fiche['imagebf_image']) && $fiche['imagebf_image'] != '') : $duration = $duration + 100; ?>
+    <div class="col-sm-3">
+      <div class="folio-item wow fadeInRightBig" data-wow-duration="1000ms" data-wow-delay="<?php echo $duration; ?>ms">
+        <div class="folio-image">
+          <img class="img-responsive" src="<?php echo redimensionner_image(
+              'files/' . $fiche['imagebf_image'],
+              'cache/image_' . $thumbresize . '_' . $thumbwidth . '_' . $thumbheight . '_' . $fiche['imagebf_image'],
+              $thumbwidth,
+              $thumbheight,
+              $thumbresize
+          ); ?>" alt="image <?php echo htmlentities($fiche['bf_titre']); ?>">
+        </div>
+        <div class="overlay">
+          <div class="overlay-content">
+            <div class="overlay-text">
+              <div class="folio-info">
+                <h3><?php echo $fiche['ListeListeville']; ?></h3>
+                <p>Auteur : <?php echo $fiche['bf_auteur']; ?></p>
+              </div>
+              <div class="folio-overview">
+                <?php if ($downloadbtn) : ?>
+                  <span class="folio-link"><a class="folio-read-more" href="files/<?php echo $fiche['imagebf_image']; ?>" download><i class="fa fa-link"></i></a></span>
+                <?php endif; ?>
+                <span class="folio-expand"><a href="<?php echo redimensionner_image(
+                    'files/' . $fiche['imagebf_image'],
+                    'cache/image_' . $bigwidth . '_' . $bigheight . '_' . $fiche['imagebf_image'],
+                    $bigwidth,
+                    $bigheight,
+                    $bigresize
+                ); ?>" data-lightbox="portfolio"><i class="fa fa-search-plus"></i></a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+  <?php endforeach; ?>
+  </div>
+</div><!-- /#gallery<?php echo $GLOBALS['nbgalleries']; ?> -->
+<div id="portfolio-single-wrap">
+  <div id="portfolio-single">
+  </div>
+</div><!-- /#portfolio-single-wrap -->
+<?php echo $pager_links; ?>
+<style>
+  /*************************
+********portfolio CSS*****
+**************************/
+
+.oxygen-gallery.container-fluid,
+.oxygen-gallery .col-sm-3  {
+  overflow: hidden;
+  padding: 0;
+}
+
+.oxygen-gallery .folio-item {
+  position: relative;
+}
+
+.oxygen-gallery .overlay {
+  background-color: #000;
+  color: #fff;
+  left: 0;
+  right:0;
+  bottom:-100%;
+  height: 0;
+  position: absolute;
+  text-align: center;
+  opacity:0;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+
+.overlay .overlay-content {
+  display: table;
+  height: 100%;
+  width: 100%;
+}
+
+.overlay .overlay-text {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.overlay .folio-info {
+  opacity: 0;
+  margin-bottom: 75px;
+  margin-top: -75px;
+  -webkit-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+}
+
+.overlay .folio-info h3 {
+  margin-top: 0;
+  color: #fff;
+}
+
+.folio-overview a {
+  font-size: 18px;
+  color: #333;
+  height: 50px;
+  width: 50px;
+  line-height: 50px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: inline-block;
+  margin-top: 20px;
+  margin-right: 5px;
+}
+
+.folio-overview a:hover {
+  color: #fff;
+}
+
+.folio-overview .folio-expand {
+  margin-top: -500px;
+  margin-left: -500px;
+}
+
+.folio-image, .folio-overview .folio-expand {
+  -webkit-transition: all 0.8s ease-in-out;
+  transition: all 0.8s ease-in-out;
+}
+
+.oxygen-gallery .folio-item:hover .folio-image {
+  -webkit-transform: scale(1.5) rotate(-15deg);
+  transform: scale(1.5) rotate(-15deg);
+}
+
+.folio-image img {
+  width: 100%;
+}
+
+.oxygen-gallery .folio-item:hover .overlay {
+  opacity: 0.8;
+  bottom: 0;
+  height: 100%;
+}
+
+.oxygen-gallery .folio-item:hover .folio-overview .folio-expand {
+  margin-top: 0;
+  margin-left:0;
+}
+
+.oxygen-gallery .folio-item:hover .overlay .folio-info {
+  opacity: 1;
+  margin-bottom:0;
+  margin-top:0;
+}
+
+
+#single-portfolio {
+  padding: 90px 0;
+  background: #f5f5f5;
+  position: relative;
+}
+
+#single-portfolio img {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#single-portfolio .close-folio-item {
+  position: absolute;
+  top: 30px;
+  font-size: 34px;
+  width: 34px;
+  height: 34px;
+  left: 50%;
+  color: #999;
+  margin-left: -17px;
+}
+</style>
+<?php endif; ?>
