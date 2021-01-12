@@ -1,0 +1,27 @@
+<?php
+function array_value_recursive($key, array $arr){
+  $val = array();
+  array_walk_recursive($arr, function($v, $k) use($key, &$val){
+      if($k == $key) array_push($val, $v);
+  });
+  return count($val) > 1 ? $val : array_pop($val);
+}
+
+if( count($fiches)>0 ) :  $row=0; ?>
+  <?php foreach($fiches as $fiche): $row++;  ?>
+  <div class="agora-atelier">
+    <h2>Inscriptions à "<?php echo $fiche['bf_titre'];?>"</h2>
+    <ol>
+      <?php
+      $abo = $GLOBALS['wiki']->GetAllTriplesValues($fiche['id_fiche'], 'inscription-agora', '', '');
+      $abo = array_value_recursive('value', $abo);
+      foreach ($abo as $a) {
+        echo '<li>'.$a.'</li>';
+      }
+      ?>
+    </ol>
+  </div>
+  <?php endforeach; ?>  
+  <style>
+  </style>
+<?php endif; ?>

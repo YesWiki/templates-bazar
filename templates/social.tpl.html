@@ -93,7 +93,7 @@ if (!empty($nbcols)) {
             <?php endif;  ?> 
             <?php if (isset($fiche['bf_url']) && !empty($fiche['bf_url'])) : ?>
                 <p class='link'>
-                    <a href="<?php echo $fiche['bf_url']; ?>" title="Voir le site associé">👉 En savoir plus</a>
+                    <a target="_blank" href="<?php echo $fiche['bf_url']; ?>" title="Voir le site associé"><i class="far fa-hand-point-right"></i> En savoir plus</a>
                 </p>
             <?php endif;  ?> 
             <?php if ($GLOBALS['wiki']->UserIsAdmin()) : ?>

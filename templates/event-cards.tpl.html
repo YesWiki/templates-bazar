@@ -1,0 +1,175 @@
+<?php
+$datejour = time();
+if (!function_exists('array_value_recursive')) {
+  function array_value_recursive($key, array $arr){
+    $val = array();
+    array_walk_recursive($arr, function($v, $k) use($key, &$val){
+        if($k == $key) array_push($val, $v);
+    });
+    return count($val) > 1 ? $val : array_pop($val);
+  }
+}
+if (!function_exists('date_periode')) {
+  function date_periode($fiche) {
+    $nbjour = 365;
+    $datejour = time();
+    $datemax = $datejour + ($nbjour*24*60*60);  // date max a J+ nb de jours
+    $datefiche = strtotime($fiche['bf_date_debut_evenement']);
+    //$datefin = strtotime($fiche['bf_date_fin_evenement']);
+    $datefin = strtotime($fiche['bf_date_debut_evenement']);
+    if (($datefiche >= $datejour  && $datefiche <= $datemax ) || ($datefin >=$datejour  && $datefin <= $datemax )) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+if (!function_exists('date_compare')) {
+  //tri par ordre chronologique
+  function date_compare($a, $b)
+  {
+    $t1 = strtotime($a['bf_date_debut_evenement']);
+    $t2 = strtotime($b['bf_date_debut_evenement']);
+    return $t1 - $t2;
+  }
+}
+$fiches = array_filter($fiches, "date_periode");
+usort($fiches, 'date_compare'); 
+
+
+if( count($fiches)>0 ) : ?>
+<div class="card-container full-width">
+    <div class="card-grid">
+      <?php foreach($fiches as $fiche): ?>
+	    <div class="agora-card">
+        <!-- Content -->
+        <div class="content">
+          <p class="card-header">
+            <?php $moisen = date("M", strtotime($fiche['bf_date_debut_evenement'])); ?>
+            <?php  $moisfr = str_replace(array('Feb', 'Apr', 'May', 'Jun','Jul', 'Aug') , array('fev', 'avr', 'mai', 'juin','juil', 'aou'), $moisen); ?>
+
+            <div class="date"><span class="day"><?php echo substr($fiche['bf_date_debut_evenement'],8,2); ?></span><span class="month"><?php echo $moisfr;?></span></div>
+            <h2>
+              <a class="modalbox" title="<?php echo htmlspecialchars($fiche['bf_titre']); ?>" href="<?php echo $GLOBALS['wiki']->href('', $fiche['id_fiche']);?>"><?php echo $fiche['bf_titre'];?></a>
+            </h2>
+        
+          </p>
+          <?php if (!empty($fiche['bf_organisateur'])) : ?>
+          <p class="organisateur">par <?php echo $fiche['bf_organisateur']; ?></p>
+          <?php endif; ?>
+          <p class="desc">
+            <?php 
+              $soustitre = strip_tags($GLOBALS['wiki']->format($fiche['bf_description']), '<br>');
+              // if any <br> at the beginning, remove it
+              $soustitre = preg_replace('!^\s*<br */?>!i', '', $soustitre);
+              // replace the consecutives <br> by one
+              $soustitre = preg_replace('#(<br */?>\s*)+#i', '<br />', $soustitre); ?>
+            <?php echo mb_substr($soustitre, 0, 180) . (strlen($soustitre) > 180 ? '...' : ''); ?>
+          </p>
+          <p class="buttons">
+            <?php if ($user = $GLOBALS['wiki']->GetUser()) : ?>
+            <?php
+            $abo = $GLOBALS['wiki']->GetAllTriplesValues($fiche['id_fiche'], 'inscription-agora', '', '');
+            $abo = array_value_recursive('value', $abo);
+            //var_dump($abo);
+            if (!empty($abo) && ($user['email'] == $abo || in_array($user['email'], $abo))) :
+            ?>
+            <a href="<?php echo $GLOBALS['wiki']->href('removesubscription', $GLOBALS['wiki']->getPageTag(), 'agora='.$fiche['id_fiche']);?>" class="btn btn-danger">Se désinscrire</a> 
+            <?php else : ?>
+            <a href="<?php echo $GLOBALS['wiki']->href('addsubscription', $GLOBALS['wiki']->getPageTag(), 'agora='.$fiche['id_fiche']); ?>" class="btn btn-primary" style="margin-right:1em;">S'inscrire</a>
+            <?php endif; ?>
+            <?php else : ?>
+            Vous devez être identifié·e pour vous inscrire
+            <?php endif; ?>
+            <a class="modalbox btn btn-default" title="<?php echo htmlspecialchars($fiche['bf_titre']); ?>" href="<?php echo $GLOBALS['wiki']->href('', $fiche['id_fiche']);?>">En savoir plus</a>
+          </p>
+        </div>
+      </div>
+      <?php endforeach; ?>  
+    </div>
+</div>
+<style>
+  .card-container {
+    width: 100%;
+    background:#e9e9e9;
+    padding : 3em 2em;
+
+  }
+  .card-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .agora-card {
+    flex-basis: calc(100% - 2em);
+    background-color: white;
+    border-radius: 4px;
+    margin: 0 1em 3em;
+  }
+  @media screen and (min-width:600px) and (max-width: 1000px) {
+    .agora-card {
+      flex-basis: calc(50% - 2em);
+    }
+  }
+  @media screen and (min-width:1001px) and (max-width: 1300px) {
+    .agora-card {
+      flex-basis: calc(33.33% - 2em);
+    }
+  }
+  @media screen and (min-width:1301px) {
+    .agora-card {
+      flex-basis: calc(25% - 2em);
+    }
+  }
+  .content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding:1em;
+    height: 100%;
+  }
+  .organisateur {
+    font-style: italic;
+  }
+  .desc {
+    flex: 1; 
+    font-size: .85em;
+  }
+  .content h2 {
+    font-size: 1.1em;
+    margin: 0;
+  }
+  .buttons {
+    margin:0 auto;
+  }
+  .date {
+  background-color: #fff;
+  border-radius: 50%;
+  color: #5a696b;
+  font-weight: 700;
+  font-size: 24px;
+  min-height: 60px;
+  min-width: 60px;
+  padding: 10px 0;
+  position: absolute;
+  right: 15px;
+  text-align: center;
+  text-transform: uppercase;
+  top: -30px;
+  box-shadow: 0px 0px 0px rgba(0,0,0,.5);
+}
+
+.date span {
+  display: block;
+  line-height: 20px;
+}
+
+.date .month {
+  font-size: 18px;
+}
+
+.modal-body  .id1 .BAZ_fiche_titre {
+  display: none;
+}
+</style>
+<?php endif; ?>
