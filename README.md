@@ -5,6 +5,11 @@ A partir de la racine du wiki, copiez les fichiers dans le répertoire /themes/t
 Attention, certains templates nécessitent l'ajout de dossiers supplémentaires comportant des fichiers (images, bibliothèques javascript, css...)
 
 ### Présentation des templates
+ - **docs-pdf.tpl.html** : présentation sous forme de vignettes d'image, titre sous l'image et quand on clique sur la vignette, ouverture du pdf associé à cett fiche. pratique pour la présentation de PV du collectif par exemple. Les champs nécessaires minimaux sont
+    - bf_titre
+    - bf_image
+    - fichier (un champ fichier donc)
+
  - **vignette_description.tpl.html** : présentation sous forme de vignettes d'image, puis de titre, courte description (bf_description) et boutons de visualisation et d'édition. Les champs nécessaires minimaux sont
     - bf_titre
     - bf_image optionnelle
