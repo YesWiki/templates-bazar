@@ -1,7 +1,7 @@
 # Templates-bazar : des templates à utiliser dans bazar
 
 ### Installation
-A partir de la racine du wiki, copiez les fichiers dans le répertoire /themes/tools/bazar/templates (à créer si inexistant)
+A partir de la racine du wiki, copiez les fichiers dans le répertoire `custom/templates/bazar/` (à créer si inexistant)
 Attention, certains templates nécessitent l'ajout de dossiers supplémentaires comportant des fichiers (images, bibliothèques javascript, css...)
 
 ### Présentation des templates
