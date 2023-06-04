@@ -13,14 +13,6 @@
          // envoi du mail
          send_mail($_POST['mailsender'][$nb], $_POST['namesender'][$nb], $fiche["bf_mail"], $_POST['subject'][$nb], strip_tags($_POST['message'][$nb].$liens), nl2br($_POST['message'][$nb].$liens));
        }
-       if (!empty($fiche["bf_mail1"])) {
-         // envoi du mail
-         send_mail($_POST['mailsender'][$nb], $_POST['namesender'][$nb], $fiche["bf_mail1"], $_POST['subject'][$nb], strip_tags($_POST['message'][$nb].$liens), nl2br($_POST['message'][$nb].$liens));
-       }
-       if (!empty($fiche["bf_mail2"])) {
-         // envoi du mail
-         send_mail($_POST['mailsender'][$nb], $_POST['namesender'][$nb], $fiche["bf_mail2"], $_POST['subject'][$nb], strip_tags($_POST['message'][$nb].$liens), nl2br($_POST['message'][$nb].$liens));
-       }
        echo '<div class="alert alert-success">Mails envoyés avec succès !</div>';
      }
    }
