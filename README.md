@@ -57,7 +57,7 @@ lien_internet***bf_url***Lien pour en savoir plus***40***255***http://*** *** **
 
   - **post-it.tpl.html** : il montre les données sous forme de post-it (3 couleurs aléatoires). Le contenu affiché dans le post-it est bf_titre et bf_aide (textelong).  Les champs nécessaires minimaux sont
     - bf_titre
-    - bf_aide
+    - bf_description
 
  - **photo-oxygen.tpl.html** : Ce template permet d'afficher une galerie de photos :
      Les champs nécessaires minimaux sont : 
