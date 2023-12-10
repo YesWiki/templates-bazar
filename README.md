@@ -5,6 +5,8 @@ A partir de la racine du wiki, copiez les fichiers dans le répertoire `custom/t
 Attention, certains templates nécessitent l'ajout de dossiers supplémentaires comportant des fichiers (images, bibliothèques javascript, css...)
 
 ### Présentation des templates
+ - **bingo.twig** : permet de générer un bingo en mode collaboratif pour l'imprimer et jouer avec les participants. Ne nécessite que le champ bf_titre (max 45 caractères). n'est pas intégré au template accessible dans le composant. Il faut donc indiquer soi-même le nom du template dans le bazarliste
+
  - **glossaire.tpl.html** : présentation sous forme d'annuaire alphabétique de défintions de mots (un glossaire quoi ;-). Quand on survol le mot, sa définition apparaît, on clique sur le mot, on ouvre une page avec sa défintion. Le formulaire idéal se compose des champs suivants (le label permet de cacher le titre afin d'éviter qu'il ne s'affiche deux fois) : 
 ```
 labelhtml*** *** *** <div style="display:none">
