@@ -1,0 +1,96 @@
+{% if fiches|length < 9 %}
+<div class="alert alert-warning">Il faut au minimum 9 fiches pour générer le bingo. Vous en avez {{ fiches|length }}.</div>
+{% else %}
+{% if fiches|length >= 9 and fiches|length < 16 %}
+{% set gridsize = 3 %}
+{% elseif  fiches|length >= 16 and fiches|length < 24  %}
+{% set gridsize = 4 %}
+{% else %}
+{% set gridsize = 5 %}
+{% endif %}
+<div class="bingo-container grid{{ gridsize }}">
+    {% for fiche in fiches|slice(0, gridsize*gridsize) %}
+       <div class="bazar-entry" {{ fiche.html_data|raw }}>
+            <span class="title">{{ fiche.bf_titre }}</span>
+        </div>
+    {% endfor %}
+</div> <!-- /.bingo-container -->
+<style>
+.grid3 { grid-template: repeat(3, 1fr) / repeat(3, 1fr);}
+.grid4 { grid-template: repeat(4, 1fr) / repeat(4, 1fr);}
+.grid5 { grid-template: repeat(5, 1fr) / repeat(5, 1fr);}
+
+.bingo-container {
+  display:grid;
+  grid-gap:0;
+  width: 1000px;
+  height: 1000px;
+  grid-auto-rows: 1fr;
+  grid-auto-columns: 1fr;
+  margin:0;
+  border:1px solid #000;
+}
+
+.bingo-container .bazar-entry {
+  position: relative;
+  border:1px solid #000;
+  min-height: 100px;
+  display: grid;
+  text-align: center;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  width: 100%;
+  padding: 1em;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.title::after {
+  content: "....................................";
+  bottom: .5em;
+  left: 1px;
+  right: 1px;
+  position: absolute;
+  display: block;
+}
+
+/* hide yeswiki interface in print mode, and do some tweaks */
+@media print {
+  @page {
+    size: auto;
+    margin: 0;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    overflow: visible;
+    margin: 0px;
+  }
+  a[href]::after {
+    content: none;
+  }
+  .footer,
+  #yw-topnav,
+  #yw-header,
+  #yw-footer,
+  .debug,
+  .BAZ_fiche_info,
+  .no-print {
+    display: none !important;
+  }
+  #yw-main {
+    padding: 0;
+  }
+  #yw-main .container {
+    margin:1em !important;
+    padding:0 !important;
+  }
+  .bingo-container {
+    width : 800px;
+    height: 800px;
+  }
+  .bingo-container .bazar-entry { font-size : 18px; }
+}
+</style>
+{% endif %}
